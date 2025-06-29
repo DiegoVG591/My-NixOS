@@ -49,12 +49,11 @@
     oh-my-zsh.enable = false; # Managing Zsh via .zshrc.personal
     initContent = ''
       # Source your personal Zsh configuration file from /home/krieg/.zshrc.personal
-      if [[ -f "$HOME/.zshrc.personal" ]]; then
-        source "$HOME/zsh/.zshrc.personal"
+      if [[ -f "$HOME/mysystem/zsh/.zshrc.personal" ]]; then
+        source "$HOME/mysystem/zsh/.zshrc.personal"
       fi
     '';
   };
-  
 
   home.stateVersion = "24.05"; # Or "24.11" if you are sure
   programs.home-manager.enable = true;
