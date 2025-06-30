@@ -1,0 +1,52 @@
+body {
+    background-color: purple;
+}
+h1 {
+    text-align: center;
+    width: 35%;
+    margin: 10px auto;
+    border-radius: 30px;
+    box-shadow: black 5px 5px 10px;
+    background: linear-gradient(to bottom, red, yellow);
+    color: #FFF;
+    text-shadow: black 2px 2px 3px;
+}
+h2 {
+    text-align: left;
+    margin: 0;
+    padding:5px 0px 50px 0px;
+    color: #000;
+}
+section {
+    width: 91%;
+    border-top: 1px dashed #999;
+    margin: 15px auto;
+}
+figure{
+    float: left;
+}
+figure img {
+    width: 200px;
+    height: auto;
+    max-width: 100%; 
+    border: 5px solid #995;
+    border-radius: 30px;
+    margin: 0px;
+    transition:transform 0.3s ease-in-out 0.1s;
+    box-shadow: black 7px 7px 30px;
+}
+figure img:hover{
+    transform: scale(1.1);
+}
+figcaption {
+    text-align: center;
+    margin-top: 25px;
+}
+footer{
+    clear: both;
+    margin-top: 100px;
+}
+footer p{
+    margin: 10px 8px;
+    color: #666;
+}
