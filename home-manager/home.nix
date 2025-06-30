@@ -43,14 +43,18 @@
     defaultCacheTtl = 1800;
     enableSshSupport = true;
   };
+
+  home.file.".zshrc.personal" = {
+  source = ../zsh/zshrc.personal;
+};
   
   programs.zsh = {
     enable = true;
     oh-my-zsh.enable = false; # Managing Zsh via .zshrc.personal
     initContent = ''
       # Source your personal Zsh configuration file from /home/krieg/.zshrc.personal
-      if [[ -f "$HOME/mysystem/zsh/.zshrc.personal" ]]; then
-        source "$HOME/mysystem/zsh/.zshrc.personal"
+      if [[ -f "$HOME/.zshrc.personal" ]]; then
+        source "$HOME/.zshrc.personal"
       fi
     '';
   };

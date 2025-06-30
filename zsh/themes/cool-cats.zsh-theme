@@ -1,4 +1,4 @@
-# /home/krieg/zsh/themes/cool-cats.zsh-theme
+# /home/krieg/mysystem/zsh/themes/cool-cats.zsh-theme
 
 # Ensure Zsh's color and prompt systems are ready
 autoload -Uz colors && colors
