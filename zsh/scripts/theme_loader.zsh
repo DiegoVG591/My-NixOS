@@ -1,4 +1,4 @@
-# /home/krieg/zsh/theme_loader.zsh
+# /home/krieg/mysystem/zsh/theme_loader.zsh
 
 # Define the base directory for themes
 ZSH_CUSTOM_THEMES_DIR="$HOME/mysystem/zsh/themes"
