@@ -1,0 +1,27 @@
+2025/06/09-21:49:44.420 4 Reusing MANIFEST /home/krieg/.config/BraveSoftware/Brave-Browser/Default/Local Storage/leveldb/MANIFEST-000001
+2025/06/09-21:49:44.428 4 Recovering log #289
+2025/06/09-21:49:44.429 4 Reusing old log /home/krieg/.config/BraveSoftware/Brave-Browser/Default/Local Storage/leveldb/000289.log 
+2025/06/09-22:01:15.834 4 Level-0 table #293: started
+2025/06/09-22:01:15.854 4 Level-0 table #293: 19498 bytes OK
+2025/06/09-22:01:15.871 4 Delete type=0 #289
+2025/06/09-22:46:59.530 6 Level-0 table #295: started
+2025/06/09-22:46:59.555 6 Level-0 table #295: 19232 bytes OK
+2025/06/09-22:46:59.573 6 Delete type=0 #292
+2025/06/09-22:46:59.574 6 Compacting 4@0 + 1@1 files
+2025/06/09-22:46:59.646 6 Generated table #296@0: 642 keys, 793283 bytes
+2025/06/09-22:46:59.646 6 Compacted 4@0 + 1@1 files => 793283 bytes
+2025/06/09-22:46:59.654 6 compacted to: files[ 0 1 1 0 0 0 0 ]
+2025/06/09-22:46:59.656 6 Delete type=2 #287
+2025/06/09-22:46:59.656 6 Delete type=2 #295
+2025/06/09-22:46:59.656 6 Delete type=2 #285
+2025/06/09-22:46:59.656 6 Delete type=2 #293
+2025/06/09-22:46:59.656 6 Delete type=2 #290
+2025/06/09-23:11:29.747 6 Level-0 table #298: started
+2025/06/09-23:11:29.774 6 Level-0 table #298: 63233 bytes OK
+2025/06/09-23:11:29.782 6 Delete type=0 #294
+2025/06/09-23:21:31.795 4 Level-0 table #300: started
+2025/06/09-23:21:31.819 4 Level-0 table #300: 52449 bytes OK
+2025/06/09-23:21:31.834 4 Delete type=0 #297
+2025/06/11-20:28:01.851 4 Level-0 table #302: started
+2025/06/11-20:28:01.934 4 Level-0 table #302: 10189 bytes OK
+2025/06/11-20:28:02.004 4 Delete type=0 #299

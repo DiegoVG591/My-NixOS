@@ -1,0 +1,6 @@
+2025/05/21-13:03:12.579 7b7 Creating DB /home/krieg/.config/BraveSoftware/Brave-Browser/Default/IndexedDB/https_fontawesome.com_0.indexeddb.leveldb since it was missing.
+2025/05/21-13:03:12.591 7b7 Reusing MANIFEST /home/krieg/.config/BraveSoftware/Brave-Browser/Default/IndexedDB/https_fontawesome.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/05/21-13:03:30.005 7b8 Level-0 table #5: started
+2025/05/21-13:03:30.014 7b8 Level-0 table #5: 3158 bytes OK
+2025/05/21-13:03:30.020 7b8 Delete type=0 #3
+2025/05/21-13:03:30.020 7b8 Manual compaction at level-0 from (begin) .. (end); will stop at (end)

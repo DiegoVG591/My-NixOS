@@ -1,0 +1,6 @@
+2025/06/09-14:28:51.556 4 Reusing MANIFEST /home/krieg/.config/BraveSoftware/Brave-Browser/Default/Local Storage/leveldb/MANIFEST-000001
+2025/06/09-14:28:51.790 4 Recovering log #286
+2025/06/09-14:28:51.924 4 Reusing old log /home/krieg/.config/BraveSoftware/Brave-Browser/Default/Local Storage/leveldb/000286.log 
+2025/06/09-14:50:01.860 6 Level-0 table #290: started
+2025/06/09-14:50:01.871 6 Level-0 table #290: 19143 bytes OK
+2025/06/09-14:50:01.882 6 Delete type=0 #286
