@@ -21,15 +21,27 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   # VirtualBox Guest Additions
-  virtualisation.virtualbox.guest.enable = true;
+  # virtualisation.virtualbox.guest.enable = true;
   # virtualisation.virtualbox.host.enable = true; # Only if this VM also hosts other VMs
 
   # Use GPU forom NVIDIA
   # Allow unfree packages, necessary for NVIDIA drivers
   nixpkgs.config.allowUnfree = true;
-  services.xserver.videoDrivers = [ "vboxvideo" ];
-  hardware.nvidia.powerManagement.enable = true; # Recommended for NVIDIA
-  hardware.nvidia.open = false; # Set to true for open-source drivers (if supported by your card)
+  services.xserver.videoDrivers = [ "nvidia" ];
+  hardware.nvidia = {
+    # This is crucial for Wayland compositors like Hyprland
+    modesetting.enable = true;
+    
+    # Recommended for power management on modern GPUs
+    powerManagement.enable = true;
+    
+    # Use the proprietary driver. Set to 'true' only if you have a very new card
+    # and want to try the open-source kernel modules. 'dakse' is safer.
+    open = false;
+    
+    # Use the stable driver package from your kernel's package set
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
+  };
 
   # Networking
   networking.hostName = "nixos"; # You can uncomment and set this
@@ -74,6 +86,7 @@
 
   # Environment variables for Wayland sessions
   environment.sessionVariables = {
+    # WRL_NO_HARDWARE_CURSORS = "1"; # If your cursor becomes invisible
     NIXOS_OZONE_WL = "1"; # Hint for Electron/Chromium apps to use Wayland
     # MOZ_ENABLE_WAYLAND = "1"; # For Firefox
     # QT_QPA_PLATFORM = "wayland"; # For Qt apps
@@ -88,6 +101,26 @@
     wlr.enable = true; # For wlroots-based compositors like Hyprland
     # gtk portal is also useful
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+  };
+
+  # Enable sound with pipewire
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    jack.enable = true;
+  };
+  # Enable bluetooth
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+  };
+  hardware.bluetooth.settings = {
+    General = {
+      Enable = "Source,Sink,Media,Socket";
+    };
   };
 
   # User Definition
@@ -123,11 +156,10 @@
     networkmanagerapplet# network manager applet
     kitty      # Terminal
     chromium
-    picom
     git
     home-manager # Useful to have the CLI available
     # linuxKernel.kernels.linux_zen # Consider if you need a specific kernel, default is usually fine
   ];
 
-  system.stateVersion = "24.11"; # Or "24.05" if that was your original install version
+  system.stateVersion = "25.05";
 }

@@ -44,17 +44,24 @@
     enableSshSupport = true;
   };
 
+  systemd.user.services.mpris-proxy = {
+    description = "Mpris proxy";
+    after = [ "network.target" "sound.target" ];
+    wantedBy = [ "default.target" ];
+    serviceConfig.ExecStart = "${pkgs.bluez}/bin/mpris-proxy";
+  };
+
   home.file.".zshrc.personal" = {
-  source = ../zsh/.zshrc.personal;
+  source = ../zsh/zshrc.personal;
 };
   
   programs.zsh = {
     enable = true;
     oh-my-zsh.enable = false; # Managing Zsh via .zshrc.personal
     initContent = ''
-      # Source your personal Zsh configuration file from /home/krieg/.zshrc.personal
-      if [[ -f "$HOME/mysystem/zsh/.zshrc.personal" ]]; then
-        source "$HOME/mysystem/zsh/.zshrc.personal"
+      # This looks for the symlink that home.file creates at ~/.zshrc.personal
+      if [[ -f "$HOME/.zshrc.personal" ]]; then
+        source "$HOME/.zshrc.personal"
       fi
     '';
   };
