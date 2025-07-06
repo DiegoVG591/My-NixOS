@@ -105,6 +105,6 @@ plugins=(git)
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-  alias update-myNixos='sudo nixos-rebuild switch --flake /home/krieg/mysystem/#myNixos'
+  alias update-myNixos='sudo nixos-rebuild switch --flake /home/krieg/mysystem#myNixos'
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"

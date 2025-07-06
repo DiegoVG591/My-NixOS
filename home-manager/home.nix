@@ -2,6 +2,11 @@
 { config, pkgs, lib, inputs, superfile, ... }: # Ensure 'lib' is included
 
 {
+  # Import your new module here
+  imports = [
+    ./modules/rnnoise.nix
+  ];
+  
   home.username = "krieg";
   home.homeDirectory = "/home/krieg";
 
@@ -18,12 +23,14 @@
     zig
     ghostty # main terminal
     inputs.superfile.packages.${pkgs.system}.default # file manager
+    # discord-ptb
     # --- hyprenviroment pkgs ---
     hyprshot # screnshots
     hyprlock # lookscreen
     hyprpaper # wallpaper
     # --- zen browser ---
     inputs.zen-browser.packages."${pkgs.system}".generic
+    pavucontrol
     # --- Fonts ---
     font-awesome
     noto-fonts
@@ -44,17 +51,17 @@
     enableSshSupport = true;
   };
 
-  systemd.user.services.mpris-proxy = {
-    description = "Mpris proxy";
-    after = [ "network.target" "sound.target" ];
-    wantedBy = [ "default.target" ];
-    serviceConfig.ExecStart = "${pkgs.bluez}/bin/mpris-proxy";
-  };
+  # udiskie: The user-facing auto-mounting daemon for removable media
+  services.udiskie = {
+    enable = true;
+    # any other config you would like to add
+  }; 
 
   home.file.".zshrc.personal" = {
-  source = ../zsh/zshrc.personal;
-};
-  
+    source = ../zsh/.zshrc.personal;
+  };
+
+  # --- ZSH ---
   programs.zsh = {
     enable = true;
     oh-my-zsh.enable = false; # Managing Zsh via .zshrc.personal
@@ -65,6 +72,17 @@
       fi
     '';
   };
+
+  # --- OBS ---
+  programs.obs-studio = {
+    enable = true;
+    plugins = with pkgs.obs-studio-plugins; [
+      wlrobs
+      obs-backgroundremoval
+      obs-pipewire-audio-capture
+    ];
+  };  
+
 
   home.stateVersion = "24.05"; # Or "24.11" if you are sure
   programs.home-manager.enable = true;

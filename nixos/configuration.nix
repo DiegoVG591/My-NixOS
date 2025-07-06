@@ -9,9 +9,9 @@
 
   # Home Manager Integration
   home-manager = {
-    extraSpecialArgs = { inherit inputs; }; # Pass flake inputs to Home Manager modules
+    extraSpecialArgs = { inherit inputs; };
     users = {
-      krieg = import ../home-manager/home.nix; # Corrected path
+      krieg = import ../home-manager/home.nix;
     };
     backupFileExtension = "hm-backup";
   };
@@ -55,7 +55,6 @@
   # --- Graphics & Display ---
   # For VirtualBox Guest, Mesa drivers are used. NVIDIA settings are not applicable.
   hardware.graphics.enable = true; # Enables OpenGL, Vulkan, VA-API, VDPAU etc. (replaces old hardware.opengl.enable)
-
   # Hyprland Window Manager
   programs.hyprland = {
     enable = true;
@@ -83,11 +82,21 @@
   #   # defaultSession = "hyprland.desktop"; # Or similar, check available .desktop files
   # };
 
+  # USB and external disk automount
+
+  # udisks2: The core service for disk management
+  # Even if other services pull it in, explicitly enabling it ensures it's there.
+  services.devmon.enable = true;
+  services.gvfs.enable = true;
+  services.udisks2.enable = true;
+  # Polkit: For proper privilege handling, allowing non-root users to mount
+  security.polkit.enable = true;
 
   # Environment variables for Wayland sessions
   environment.sessionVariables = {
     # WRL_NO_HARDWARE_CURSORS = "1"; # If your cursor becomes invisible
     NIXOS_OZONE_WL = "1"; # Hint for Electron/Chromium apps to use Wayland
+    STEAM_EXTRA_COMPAT_TOOLS_PATHS = "/home/krieg/.steam/root/compatibilitytools.d";
     # MOZ_ENABLE_WAYLAND = "1"; # For Firefox
     # QT_QPA_PLATFORM = "wayland"; # For Qt apps
     # SDL_VIDEODRIVER = "wayland";
@@ -103,41 +112,65 @@
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
   };
 
-  # Enable sound with pipewire
+  # sound  
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
     alsa.enable = true;
-    alsa.support32Bit = true;
     pulse.enable = true;
     jack.enable = true;
+    wireplumber.enable = true; # It's good practice to keep this explicit
   };
-  # Enable bluetooth
+  # bluetooth
   hardware.bluetooth = {
     enable = true;
     powerOnBoot = true;
-  };
-  hardware.bluetooth.settings = {
-    General = {
-      Enable = "Source,Sink,Media,Socket";
+    # This settings block is correct and works.
+    settings = {
+      General = {
+        Enable = "Source,Sink,Media,Socket";
+      };
     };
   };
-
+  
   # User Definition
   users.users.krieg = {
     isNormalUser = true;
     home = "/home/krieg";
     description = "Krieg GottNMC";
-    extraGroups = [ "wheel" "video" "audio" "networkmanager" ]; # Common groups
+    extraGroups = [ "wheel" "video" "audio" "networkmanager" "pipewire" ]; # Common groups
     shell = pkgs.zsh; # Set Zsh as the default shell
   };
+  # Personal pkgs you might not want
+  users.users.krieg.packages = with pkgs; [
+    discord-ptb
+  ];
+  # --- steam ---
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+    localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
+    gamescopeSession.enable = true;
+  };
+  
+  programs.gamemode.enable = true;
+  hardware.steam-hardware.enable = true;
 
+  # --- OBS ---
+  boot.extraModulePackages = with config.boot.kernelPackages; [
+    v4l2loopback
+  ];
+  boot.extraModprobeConfig = ''
+    options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
+  '';
+  
   # System-wide Zsh (makes it available, provides /etc/zshrc)
   programs.zsh.enable = true;
-
+  
   # Nix Flakes
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
+  
   # System Packages (keep minimal, prefer Home Manager for user apps)
   environment.systemPackages = with pkgs; [
     vim
@@ -146,19 +179,26 @@
     egl-wayland # If not pulled in by other dependencies
     waybar # Status bar for Hyprland
     (waybar.overrideAttrs (oldAttrs: { # If you still need experimental features for Waybar
-      mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
+    mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
     }))
     dunst      # Notification daemon
     libnotify  # For sending notifications
-    swww       # Wallpaper daemon for Wayland (if you use it)
+    # swww       # Wallpaper daemon for Wayland (if you use it)
     # rofi-wayland # Application launcher (Wayland-compatible Rofi fork)
     # wofi     # Another common Wayland launcher
     networkmanagerapplet# network manager applet
-    kitty      # Terminal
+    # kitty      # Terminal
     chromium
+    wget
     git
+    p7zip
     home-manager # Useful to have the CLI available
+    # --- steam realated pkgs ---
+    protonup
+    mangohud
     # linuxKernel.kernels.linux_zen # Consider if you need a specific kernel, default is usually fine
+    # adding partition format types
+    exfatprogs # exfat
   ];
 
   system.stateVersion = "25.05";
