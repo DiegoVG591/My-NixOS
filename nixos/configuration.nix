@@ -121,7 +121,7 @@
     jack.enable = true;
     wireplumber.enable = true; # It's good practice to keep this explicit
     # Setting sample rate to 48kHz to ensure noise supresor sounds good
-    config.pipewire = {
+    extraConfig.pipewire."10-global-sample-rate" = {
       "context.properties" = {
         "default.clock.rate" = 48000;
       };
