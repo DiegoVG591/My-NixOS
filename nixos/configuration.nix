@@ -120,6 +120,12 @@
     pulse.enable = true;
     jack.enable = true;
     wireplumber.enable = true; # It's good practice to keep this explicit
+    # Setting sample rate to 48kHz to ensure noise supresor sounds good
+    config.pipewire = {
+      "context.properties" = {
+        "default.clock.rate" = 48000;
+      };
+    };
   };
   # bluetooth
   hardware.bluetooth = {
