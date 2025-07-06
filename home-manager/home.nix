@@ -29,8 +29,6 @@
     hyprshot # screnshots
     hyprlock # lookscreen
     hyprpaper # wallpaper
-    # --- noise suppression ---
-    easyeffects
     # --- zen browser ---
     inputs.zen-browser.packages."${pkgs.system}".generic
     pavucontrol
