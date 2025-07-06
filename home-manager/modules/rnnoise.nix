@@ -21,12 +21,12 @@
             }
             filter.graph = {
               nodes = [
+                # --- THIS SECTION HAS BEEN CORRECTED ---
                 {
-                  type    = "builtin"
+                  type    = "spa-node"
                   name    = "denoiser"
-                  label   = "noise_suppressor_stereo"
+                  factory = "audioconvert"
                   control = {
-                    # This controls the STRENGTH. Start low and increase if needed.
                     "noise.suppress_ms" = 10
                   }
                 }
@@ -37,8 +37,4 @@
       ]
     '';
   };
-
-  # The rnnoise-plugin is no longer needed with this method
-  # but we leave the line here and comment it out for future reference.
-  # home.packages = [ pkgs.rnnoise-plugin ];
 }
