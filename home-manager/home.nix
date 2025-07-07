@@ -2,12 +2,6 @@
 { config, pkgs, lib, inputs, superfile, ... }: # Ensure 'lib' is included
 
 {
-  # Import your new module here
-  imports = [
-    ./modules/rnnoise.nix
-    ./modules/mic-settings.nix
-  ];
-  
   home.username = "krieg";
   home.homeDirectory = "/home/krieg";
 
@@ -60,6 +54,16 @@
 
   home.file.".zshrc.personal" = {
     source = ../zsh/.zshrc.personal;
+  };
+
+  # --- RNNoise ---
+  programs.easyeffects = {
+    enable = true;
+    # This explicitly tells EasyEffects to load these plugins
+    plugins = with pkgs; [
+      rnnoise-plugin        # The RNNoise suppressor
+      lsp-plugins           # A high-quality set of plugins, including a great Equalizer
+    ];
   };
 
   # --- ZSH ---
