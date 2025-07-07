@@ -23,6 +23,7 @@
     hyprshot # screnshots
     hyprlock # lookscreen
     hyprpaper # wallpaper
+    easyeffects
     # --- zen browser ---
     inputs.zen-browser.packages."${pkgs.system}".generic
     pavucontrol
@@ -54,16 +55,6 @@
 
   home.file.".zshrc.personal" = {
     source = ../zsh/.zshrc.personal;
-  };
-
-  # --- RNNoise ---
-  programs.easyeffects = {
-    enable = true;
-    # This explicitly tells EasyEffects to load these plugins
-    plugins = with pkgs; [
-      rnnoise-plugin        # The RNNoise suppressor
-      lsp-plugins           # A high-quality set of plugins, including a great Equalizer
-    ];
   };
 
   # --- ZSH ---
