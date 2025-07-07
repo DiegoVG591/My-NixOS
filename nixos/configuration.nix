@@ -131,7 +131,7 @@
     pcm.rnnoise {
       type ladspa
       slave.pcm "plughw:2,0"
-      plugin "librnnoise_ladspa"
+      plugin "rnnoise_ladspa"
       control {
         "VAD Threshold (%)" 5.0
         "VAD Grace Period (ms)" 300
