@@ -4,6 +4,7 @@
 {
   # Import your new module here
   imports = [
+    ./modules/rnnoise.nix
     ./modules/mic-settings.nix
   ];
   

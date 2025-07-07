@@ -127,18 +127,6 @@
       };
     };
   };
-  sound.extraConfig = ''
-    pcm.rnnoise {
-      type ladspa
-      slave.pcm "plughw:2,0"
-      plugin "rnnoise_ladspa"
-      control {
-        "VAD Threshold (%)" 5.0
-        "VAD Grace Period (ms)" 300
-        "Retroactive VAD Grace (ms)" 40
-      }
-    }
-  '';
   # bluetooth
   hardware.bluetooth = {
     enable = true;
@@ -214,8 +202,6 @@
     # --- steam realated pkgs ---
     protonup
     mangohud
-    alsa-utils
-    rnnoise-plugin
     # linuxKernel.kernels.linux_zen # Consider if you need a specific kernel, default is usually fine
     # adding partition format types
     exfatprogs # exfat
