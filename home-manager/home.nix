@@ -23,7 +23,8 @@
     hyprshot # screnshots
     hyprlock # lookscreen
     hyprpaper # wallpaper
-    easyeffects
+    # --- game launchers ---
+    heroic
     # --- zen browser ---
     inputs.zen-browser.packages."${pkgs.system}".generic
     pavucontrol

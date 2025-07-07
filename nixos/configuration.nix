@@ -97,6 +97,10 @@
     # WRL_NO_HARDWARE_CURSORS = "1"; # If your cursor becomes invisible
     NIXOS_OZONE_WL = "1"; # Hint for Electron/Chromium apps to use Wayland
     STEAM_EXTRA_COMPAT_TOOLS_PATHS = "/home/krieg/.steam/root/compatibilitytools.d";
+    # Davinci resolve plugins
+    OFX_PLUGIN_PATH = lib.concatStringsSep ":" [
+      # "${pkgs.openfx-misc}"
+    ];
     # MOZ_ENABLE_WAYLAND = "1"; # For Firefox
     # QT_QPA_PLATFORM = "wayland"; # For Qt apps
     # SDL_VIDEODRIVER = "wayland";
@@ -170,6 +174,19 @@
   boot.extraModprobeConfig = ''
     options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
   '';
+  # --- Davinci resolve ---
+  nixpkgs.overlays = [
+    (final: prev: {
+      # We are creating a modified version of the davinci-resolve package
+      davinci-resolve = prev.davinci-resolve.overrideAttrs (oldAttrs: {
+        # After installing the package, this hook creates a wrapper script
+        postInstall = ''
+          makeWrapper $out/bin/resolve $out/bin/davinci-resolve \
+            --set QT_QPA_PLATFORM xcb
+        '';
+      });
+    })
+  ];
   
   # System-wide Zsh (makes it available, provides /etc/zshrc)
   programs.zsh.enable = true;
@@ -197,11 +214,12 @@
     chromium
     wget
     git
-    p7zip
+    p7zip # 7zip
     home-manager # Useful to have the CLI available
     # --- steam realated pkgs ---
     protonup
     mangohud
+    davinci-resolve # video editor
     # linuxKernel.kernels.linux_zen # Consider if you need a specific kernel, default is usually fine
     # adding partition format types
     exfatprogs # exfat
