@@ -5,20 +5,58 @@
   home.username = "krieg";
   home.homeDirectory = "/home/krieg";
 
+  
+  systemd.user.services."create-virtual-mic" = {
+    Unit = {
+      Description = "Create a PipeWire loopback device for OBS";
+      # We now depend on the native pipewire service
+      After = [ "pipewire.service" ];
+    };
+  
+    Service = {
+      # This uses PipeWire's native tool, pw-cli, to load the loopback module.
+      # This is the most direct and reliable method.
+      ExecStart = ''
+        ${pkgs.pipewire}/bin/pw-cli load-module libpipewire-module-loopback \
+        node.description="OBS-Virtual-Audio" \
+        capture.props={node.description="Virtual-Mic-Source-(from-OBS)"} \
+        playback.props={node.description="Virtual-Mic-Sink-(to-OBS)"}
+      '';
+    };
+  
+    Install = {
+      WantedBy = [ "default.target" ];
+    };
+  };
+  
   home.packages = with pkgs; [
     hello
     tree
     rofi-wayland
     brave # browser
-    neovim # editor
+    lua
+    luarocks
+    #
     thefuck
     tmux
+    # --- languages --
+    selene # for linting
     python314
     plantuml
     zig
+    go
+    unzip
+    nodejs # This provides npm
+    dotnet-sdk
+    # ----
     ghostty # main terminal
     inputs.superfile.packages.${pkgs.system}.default # file manager
-    # discord-ptb
+    pulseaudio
+    # For C# Language Server
+    dotnet-sdk
+    # For C/C++ Language Server (clangd) and build tools
+    clang-tools
+    cmake
     # --- hyprenviroment pkgs ---
     hyprshot # screnshots
     hyprlock # lookscreen
@@ -68,6 +106,18 @@
         source "$HOME/.zshrc.personal"
       fi
     '';
+  };
+
+  # --- Neovim Configuration ---
+  # This is now its own separate block, which is the correct syntax.
+  programs.neovim = {
+    enable = true;
+    # This makes the C compiler and tree-sitter CLI available to Neovim
+    # so it can successfully compile the parsers.
+    extraPackages = with pkgs; [
+      gcc
+      tree-sitter
+    ];
   };
 
   # --- OBS ---

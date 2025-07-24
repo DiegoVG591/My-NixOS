@@ -9,8 +9,9 @@
 
   # Home Manager Integration
   home-manager = {
-    extraSpecialArgs = { inherit inputs; };
+    extraSpecialArgs = { inherit inputs; }; # This is fine
     users = {
+      # Use the simplest import method. This is correct.
       krieg = import ../home-manager/home.nix;
     };
     backupFileExtension = "hm-backup";
@@ -61,6 +62,8 @@
     xwayland.enable = true; # For X11 compatibility
     # package = pkgs.hyprland; # Optionally specify a different Hyprland package if needed
   };
+
+  programs.adb.enable = true;
 
   # Login Manager for Hyprland (using greetd as a lightweight option)
   services.greetd = {
@@ -116,15 +119,14 @@
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
   };
 
-  # sound  
+  # sound
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
     alsa.enable = true;
     pulse.enable = true;
     jack.enable = true;
-    wireplumber.enable = true; # It's good practice to keep this explicit
-    # Setting sample rate to 48kHz to ensure noise supresor sounds good
+    wireplumber.enable = true;
     extraConfig.pipewire."10-global-sample-rate" = {
       "context.properties" = {
         "default.clock.rate" = 48000;
@@ -135,7 +137,6 @@
   hardware.bluetooth = {
     enable = true;
     powerOnBoot = true;
-    # This settings block is correct and works.
     settings = {
       General = {
         Enable = "Source,Sink,Media,Socket";
@@ -148,7 +149,7 @@
     isNormalUser = true;
     home = "/home/krieg";
     description = "Krieg GottNMC";
-    extraGroups = [ "wheel" "video" "audio" "networkmanager" "pipewire" ]; # Common groups
+    extraGroups = [ "wheel" "video" "audio" "networkmanager" "pipewire" "adbusers" ]; # Common groups
     shell = pkgs.zsh; # Set Zsh as the default shell
   };
   # Personal pkgs you might not want
@@ -219,7 +220,13 @@
     # --- steam realated pkgs ---
     protonup
     mangohud
+    # --- temporary IDEs
+    jetbrains.clion
+    # --- not taking ---
+    obsidian
+    # --- others ---
     davinci-resolve # video editor
+    android-tools # for modifing things on Andrid (will use it for installing grapheno)
     # linuxKernel.kernels.linux_zen # Consider if you need a specific kernel, default is usually fine
     # adding partition format types
     exfatprogs # exfat

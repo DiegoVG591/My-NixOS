@@ -106,5 +106,9 @@ plugins=(git)
 #
 # Example aliases
   alias update-myNixos='sudo nixos-rebuild switch --flake /home/krieg/mysystem#myNixos'
+  # Creates the virtual audio cable by running our script
+  alias create-cable="/home/krieg/mysystem/VM-MicScrit/virtualMic.sh"
+  # Removes all virtual devices created by the script
+  alias destroy-cable="pactl unload-module module-null-sink"
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"

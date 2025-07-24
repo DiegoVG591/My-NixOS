@@ -19,7 +19,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, superfile, ... }@inputs:
+  outputs = { nixpkgs, home-manager, superfile, ... }@inputs:
   let
     system = "x86_64-linux";
   in
