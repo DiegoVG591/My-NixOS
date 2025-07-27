@@ -188,7 +188,7 @@
       });
     })
   ];
-  
+
   # System-wide Zsh (makes it available, provides /etc/zshrc)
   programs.zsh.enable = true;
   
@@ -212,6 +212,7 @@
     # wofi     # Another common Wayland launcher
     networkmanagerapplet# network manager applet
     # kitty      # Terminal
+    ghostty # --- Main terminal ---
     chromium
     wget
     git
@@ -220,6 +221,8 @@
     # --- steam realated pkgs ---
     protonup
     mangohud
+    # --- unity for game dev ---
+    unityhub
     # --- temporary IDEs
     jetbrains.clion
     # --- not taking ---

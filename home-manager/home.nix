@@ -5,6 +5,9 @@
   home.username = "krieg";
   home.homeDirectory = "/home/krieg";
 
+  home.sessionPath = [
+    "$HOME/.local/bin"
+  ];
   
   systemd.user.services."create-virtual-mic" = {
     Unit = {
@@ -49,7 +52,6 @@
     nodejs # This provides npm
     dotnet-sdk
     # ----
-    ghostty # main terminal
     inputs.superfile.packages.${pkgs.system}.default # file manager
     pulseaudio
     # For C# Language Server
