@@ -110,5 +110,7 @@ plugins=(git)
   alias create-cable="/home/krieg/mysystem/VM-MicScrit/virtualMic.sh"
   # Removes all virtual devices created by the script
   alias destroy-cable="pactl unload-module module-null-sink"
+  # open superfile
+  alias spf='superfile'
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
