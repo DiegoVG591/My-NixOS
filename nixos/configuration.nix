@@ -42,6 +42,14 @@
     
     # Use the stable driver package from your kernel's package set
     package = config.boot.kernelPackages.nvidiaPackages.stable;
+
+    prime = {
+      offload.enable = true;
+      offload.enableOffloadCmd = true;
+    
+      intelBusId = "PCI:0:2:0";
+      nvidiaBusId = "PCI:1:0:0";
+    };
   };
 
   # Networking
@@ -49,9 +57,26 @@
   networking.networkmanager.enable = true;
 
   # Timezone and Locale
-  time.timeZone = "Europe/Madrid";
-  i18n.defaultLocale = "en_US.UTF-8";
-  console.keyMap = "us"; # Example, set your preferred keymap
+time.timeZone = "Europe/Madrid";
+#i18n.defaultLocale = "en_US.UTF-8";
+i18n.inputMethod = {
+  enabled = "fcitx5";
+  fcitx5.addons = with pkgs; [
+    kdePackages.fcitx5-with-addons
+    fcitx5-mozc
+    fcitx5-gtk
+    fcitx5-configtool
+  ];
+};
+
+environment.variables = {
+  GTK_IM_MODULE = "fcitx";
+  QT_IM_MODULE = "fcitx";
+  XMODIFIERS = "@im=fcitx";
+  GLFW_IM_MODULE = "ibus";
+};
+
+
 
   # --- Graphics & Display ---
   # For VirtualBox Guest, Mesa drivers are used. NVIDIA settings are not applicable.
@@ -234,6 +259,9 @@
     # adding partition format types
     exfatprogs # exfat
     jmtpfs # So that I can mount my phones as a file
+    libsForQt5.fcitx5-with-addons
+    fcitx5
+    kdePackages.fcitx5-with-addons
   ];
 
   system.stateVersion = "25.05";

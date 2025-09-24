@@ -35,13 +35,15 @@
   home.packages = with pkgs; [
     hello
     tree
-    rofi-wayland
+    rofi
     brave # browser
     lua
     luarocks
     #
-    thefuck
+    pay-respects
     tmux
+    # --- Image editors ---
+    gimp3
     # --- languages --
     selene # for linting
     python314
@@ -51,6 +53,7 @@
     unzip
     nodejs # This provides npm
     dotnet-sdk
+    jdk
     # ----
     inputs.superfile.packages.${pkgs.system}.default # file manager
     pulseaudio
