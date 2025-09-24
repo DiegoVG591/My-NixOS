@@ -54,6 +54,8 @@
     nodejs # This provides npm
     dotnet-sdk
     jdk
+    # --- Cybersecurity pkgs ---
+    wireshark
     # ----
     inputs.superfile.packages.${pkgs.system}.default # file manager
     pulseaudio

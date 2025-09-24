@@ -173,9 +173,13 @@ environment.variables = {
     isNormalUser = true;
     home = "/home/krieg";
     description = "Krieg GottNMC";
-    extraGroups = [ "wheel" "video" "audio" "networkmanager" "pipewire" "adbusers" ]; # Common groups
+    extraGroups = [ "wheel" "video" "audio" "networkmanager" "pipewire" "adbusers" "wireshark" ]; # Common groups
     shell = pkgs.zsh; # Set Zsh as the default shell
   };
+  
+  # --- wireshark ---
+  programs.wireshark.enable = true;
+
   # Personal pkgs you might not want
   users.users.krieg.packages = with pkgs; [
     discord-ptb
