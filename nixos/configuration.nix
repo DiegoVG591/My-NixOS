@@ -60,7 +60,8 @@
 time.timeZone = "Europe/Madrid";
 #i18n.defaultLocale = "en_US.UTF-8";
 i18n.inputMethod = {
-  enabled = "fcitx5";
+  type = "fcitx5";
+  enabled = true;
   fcitx5.addons = with pkgs; [
     kdePackages.fcitx5-with-addons
     fcitx5-mozc
