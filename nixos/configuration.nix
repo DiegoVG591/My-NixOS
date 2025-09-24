@@ -60,10 +60,8 @@
 time.timeZone = "Europe/Madrid";
 #i18n.defaultLocale = "en_US.UTF-8";
 i18n.inputMethod = {
-  type = "fcitx5";
-  enabled = true;
+  enabled = "fcitx5";
   fcitx5.addons = with pkgs; [
-    kdePackages.fcitx5-with-addons
     fcitx5-mozc
     fcitx5-gtk
     fcitx5-configtool
@@ -260,9 +258,6 @@ environment.variables = {
     # adding partition format types
     exfatprogs # exfat
     jmtpfs # So that I can mount my phones as a file
-    libsForQt5.fcitx5-with-addons
-    fcitx5
-    kdePackages.fcitx5-with-addons
   ];
 
   system.stateVersion = "25.05";
