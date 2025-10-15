@@ -50,8 +50,23 @@
 
   # Timezone and Locale
   time.timeZone = "Europe/Madrid";
-  i18n.defaultLocale = "en_US.UTF-8";
-  console.keyMap = "us"; # Example, set your preferred keymap
+  #i18n.defaultLocale = "en_US.UTF-8";
+  i18n.inputMethod = {
+    type = "fcitx5";
+    enable = true;
+    fcitx5.addons = with pkgs; [
+        fcitx5-mozc
+        fcitx5-gtk
+        fcitx5-configtool
+    ];
+};
+
+environment.variables = {
+  GTK_IM_MODULE = "fcitx";
+  QT_IM_MODULE = "fcitx";
+  XMODIFIERS = "@im=fcitx";
+  GLFW_IM_MODULE = "ibus";
+};
 
   # --- Graphics & Display ---
   # For VirtualBox Guest, Mesa drivers are used. NVIDIA settings are not applicable.
@@ -191,10 +206,14 @@
 
   # System-wide Zsh (makes it available, provides /etc/zshrc)
   programs.zsh.enable = true;
+  # Fan argb controler
+  services.hardware.openrgb.enable = true;
+  boot.kernelModules = [ "i2c-dev" ];
+
   
   # Nix Flakes
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  
+
   # System Packages (keep minimal, prefer Home Manager for user apps)
   environment.systemPackages = with pkgs; [
     vim
@@ -230,10 +249,15 @@
     # --- others ---
     davinci-resolve # video editor
     android-tools # for modifing things on Andrid (will use it for installing grapheno)
+    # --- Media player open source ---
+    vlc
     # linuxKernel.kernels.linux_zen # Consider if you need a specific kernel, default is usually fine
     # adding partition format types
     exfatprogs # exfat
     jmtpfs # So that I can mount my phones as a file
+    # --- Fan arg and speed control ---
+    fanctl
+    openrgb-with-all-plugins
   ];
 
   system.stateVersion = "25.05";

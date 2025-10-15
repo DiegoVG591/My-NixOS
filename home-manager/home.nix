@@ -35,12 +35,12 @@
   home.packages = with pkgs; [
     hello
     tree
-    rofi-wayland
+    rofi
     brave # browser
     lua
     luarocks
     #
-    thefuck
+    pay-respects
     tmux
     # --- languages --
     selene # for linting
@@ -52,6 +52,8 @@
     nodejs # This provides npm
     dotnet-sdk
     # ----
+    # --- Minecraft launcher ---
+    prismlauncher
     inputs.superfile.packages.${pkgs.system}.default # file manager
     pulseaudio
     # For C# Language Server

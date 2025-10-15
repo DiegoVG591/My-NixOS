@@ -112,5 +112,7 @@ plugins=(git)
   alias destroy-cable="pactl unload-module module-null-sink"
   # open superfile
   alias spf='superfile'
+  alias rmhs='find ~ -name "*_hyprshot.png" -delete'
+  # alias rmVods='find ~/vods -name "*.mp4" -delete' !!!!!! Be carfull do not uncomment this untill you have made a script that hives a warning to the user to make sure he wants to delet the files, and asks twise, while listing all files to be deleted 
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
