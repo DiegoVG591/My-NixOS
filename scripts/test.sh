@@ -1,4 +1,4 @@
-#!usr/bin/env bash
+#!/usr/bin/env bash
 
 # 1. Define the custom path.
 #    Use $HOME instead of ~ in scripts for better reliability.

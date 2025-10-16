@@ -73,6 +73,7 @@
     # --- Fonts ---
     font-awesome
     noto-fonts
+    monocraft
   ] ++ (
     # Add all Nerd Fonts
     builtins.filter lib.attrsets.isDerivation (lib.attrValues pkgs.nerd-fonts)
