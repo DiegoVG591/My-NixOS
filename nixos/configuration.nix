@@ -132,7 +132,8 @@
 time.timeZone = "Europe/Madrid";
 #i18n.defaultLocale = "en_US.UTF-8";
 i18n.inputMethod = {
-  enabled = "fcitx5";
+  type = "fcitx5";
+  enable = true;
   fcitx5.addons = with pkgs; [
     fcitx5-mozc
     fcitx5-gtk
@@ -146,8 +147,6 @@ environment.variables = {
   XMODIFIERS = "@im=fcitx";
   GLFW_IM_MODULE = "ibus";
 };
-
-
 
   # --- Graphics & Display ---
   # For VirtualBox Guest, Mesa drivers are used. NVIDIA settings are not applicable.
