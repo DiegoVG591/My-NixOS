@@ -55,10 +55,14 @@
     dotnet-sdk
     jdk
     # --- Cybersecurity pkgs --
-    wirshark
+    wireshark
+    nmap
+    nginx
     # --- Minecraft launcher ---
     prismlauncher
+    # --- terminal file manager ---
     inputs.superfile.packages.${pkgs.system}.default # file manager
+    #
     pulseaudio
     # For C# Language Server
     dotnet-sdk
