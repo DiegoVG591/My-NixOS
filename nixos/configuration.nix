@@ -56,6 +56,78 @@
   networking.hostName = "nixos"; # You can uncomment and set this
   networking.networkmanager.enable = true;
 
+  networking.firewall = {
+    allowedTCPPorts = [ 81 443 20 21 990 ];
+    allowedTCPPortRanges = [ 
+        { from = 5000; to = 10000; }
+    ];
+  };
+
+  services.httpd.enable = true;
+  services.httpd.adminAddr = "webmaster@example.org";
+  services.httpd.enablePHP = true; # oof... not a great idea in my opinion
+
+  services.httpd.virtualHosts."example.org" = {
+    documentRoot = "/var/www/example.org";
+    # want ssl + a let's encrypt certificate? add `forceSSL = true;` right here
+  };
+
+  services.mysql.enable = true;
+  services.mysql.package = pkgs.mariadb;
+
+  services.nginx.package = pkgs.nginxStable.override { openssl = pkgs.libressl; };
+  # FPT (File transfer protocol)
+  services.vsftpd = {
+    enable = true;
+    
+    # === Basic Configuration ===
+    # anonymousEnable = false;    # Disable anonymous login
+    # localEnable = true;         # Allow local users to log in
+    # writeEnable = true;         # Allow file uploads/changes
+    # localUmask = "0002";        # Set file permissions for new files (664) and folders (775)
+    # 
+    # === Passive Mode Port Range ===
+    # pasvEnable = true;
+    # pasvMinPort = 5000;
+    # pasvMaxPort = 10000;
+    # 
+    # === Directory and Chroot (Jail) Settings ===
+    # localRoot = "/ftp";                 # Set a common root directory for all users
+    # chrootLocalUser = true;             # Restrict users to their home/root directory
+    # allowWriteableChroot = true;        # A necessary security setting for modern vsftpd
+    # chrootListEnable = true;            # Enable the list of users who are NOT jailed
+    # chrootListFile = "/etc/vsftpd.chroot_list"; # Path to that list
+  
+    # === SSL/TLS Configuration ===
+    # sslEnable = true;                   # Enable SSL/TLS
+    # NOTE: We will generate this vsftpd.pem file in the next section.
+    # This path assumes you place it within your Nix config directory.
+    # rsaCertFile = "/home/krieg/mysystem/certs/vsftpd.pem";
+    # rsaPrivateKeyFile = "/home/krieg/mysystem/certs/vsftpd.pem";
+    # allowAnonSsl = false;               # Don't allow anonymous users over SSL
+    # forceLocalDataSsl = true;           # Force data transfer over SSL
+    # forceLocalLoginsSsl = true;         # Force logins over SSL
+    # 
+    # --- Recommended SSL/TLS Protocols and Ciphers ---
+    # sslTlsv1 = true;
+    # sslSslv2 = false;
+    # sslSslv3 = false;
+    # requireSslReuse = false;
+    # sslCiphers = "HIGH";
+  };
+
+  # Create the /ftp directory with correct permissions
+  systemd.tmpfiles.rules = [
+    "d /ftp 0755 root root -"
+  ];
+  
+  # Create the chroot list and add your admin user to it
+  # This user will NOT be jailed in the FTP directory.
+  environment.etc."vsftpd.chroot_list".text = ''
+    # Users listed in this file will NOT be chrooted.
+    krieg
+  '';
+
   # Timezone and Locale
 time.timeZone = "Europe/Madrid";
 #i18n.defaultLocale = "en_US.UTF-8";
@@ -169,6 +241,18 @@ environment.variables = {
   };
   
   # User Definition
+  users.users.ftpuser = {
+    isNormalUser = true;
+    description = "User for FTP access";
+        shell = pkgs.shadow + "/bin/nologin"; # This prevents interactive logins
+  };
+
+  # Blockd the user in the SSHD config
+  #services.openssh = {
+  #  enable = true;
+  #  settings.DenyUsers = [ "ftpuser" ];
+  #};
+
   users.users.krieg = {
     isNormalUser = true;
     home = "/home/krieg";

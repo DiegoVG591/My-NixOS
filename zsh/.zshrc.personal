@@ -112,5 +112,6 @@ plugins=(git)
   alias destroy-cable="pactl unload-module module-null-sink"
   # open superfile
   alias spf='superfile'
+  alias connectUtad='nmcli device wifi connect "U-tad" password "tPktpUZhRT"' # TODO:Fix it
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"

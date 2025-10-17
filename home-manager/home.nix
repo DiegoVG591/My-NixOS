@@ -54,8 +54,14 @@
     nodejs # This provides npm
     dotnet-sdk
     jdk
+    # --- VM for windows ---
+    # wineWowPackages.waylandFull # Uncoment this line when ever you are sure you want to install win, don't want any unecesary pkgs
     # --- Cybersecurity pkgs ---
     wireshark
+    nmap
+    nginx
+    # --- Minecraft launcher ---
+    prismlauncher
     # ----
     inputs.superfile.packages.${pkgs.system}.default # file manager
     pulseaudio
