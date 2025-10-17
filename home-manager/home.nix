@@ -82,6 +82,8 @@
     # --- Fonts ---
     font-awesome
     noto-fonts
+    monocraft
+    rictydiminished-with-firacode
   ] ++ (
     # Add all Nerd Fonts
     builtins.filter lib.attrsets.isDerivation (lib.attrValues pkgs.nerd-fonts)
