@@ -2,5 +2,5 @@ This is a work in progres, nothing profecional for now, once I have a nixos base
 
 # TODO list
 
-- Learn lua to make a working and proper nvim configuration
+- Make a LSP server to make a proper LSP config, in moduels, because the current one is a monolith
 - clean all my nix config so that there is no more than 3 levels of nesting, etc.
