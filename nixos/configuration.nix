@@ -55,6 +55,9 @@
   # Networking
   networking.hostName = "nixos"; # You can uncomment and set this
   networking.networkmanager.enable = true;
+  # Tell NetworkManager to use iwd as its backend
+  networking.wireless.iwd.enable = true;
+  networking.networkmanager.wifi.backend = "iwd";
 
   networking.firewall = {
     allowedTCPPorts = [ 81 443 20 21 990 ];
@@ -137,7 +140,7 @@ i18n.inputMethod = {
   fcitx5.addons = with pkgs; [
     fcitx5-mozc
     fcitx5-gtk
-    fcitx5-configtool
+    qt6Packages.fcitx5-configtool
   ];
 };
 
@@ -330,7 +333,7 @@ environment.variables = {
     p7zip # 7zip
     home-manager # Useful to have the CLI available
     # --- steam realated pkgs ---
-    protonup
+    protonup-ng
     mangohud
     # --- unity for game dev ---
     unityhub

@@ -9,7 +9,7 @@
     };
     # Add zen-browser input here
     zen-browser = {
-      url = "github:MarceColl/zen-browser-flake";
+      url = "github:0xc000022070/zen-browser-flake";
       # Make zen-browser use the same nixpkgs as the rest of your system
       inputs.nixpkgs.follows = "nixpkgs";
     };
