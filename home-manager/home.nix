@@ -61,7 +61,7 @@
     # --- Minecraft launcher ---
     prismlauncher
     # --- terminal file manager ---
-    inputs.superfile.packages.${pkgs.system}.default # file manager
+    inputs.superfile.packages.${pkgs.stdenv.hostPlatform.system}.default # file manager
     #
     pulseaudio
     # For C# Language Server
@@ -75,8 +75,6 @@
     hyprpaper # wallpaper
     # --- game launchers ---
     heroic
-    # --- zen browser ---
-    inputs.zen-browser.packages."${pkgs.system}".generic
     pavucontrol
     # --- Fonts ---
     font-awesome
@@ -121,6 +119,15 @@
       fi
     '';
   };
+
+  # --- Zen browser ---
+  imports = [
+    inputs.zen-browser.homeModules.beta
+    # or inputs.zen-browser.homeModules.twilight
+    # or inputs.zen-browser.homeModules.twilight-official
+  ];
+
+  programs.zen-browser.enable = true;
 
   # --- Neovim Configuration ---
   # This is now its own separate block, which is the correct syntax.

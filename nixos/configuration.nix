@@ -48,6 +48,9 @@
   networking.hostName = "nixos"; # You can uncomment and set this
   networking.networkmanager.enable = true;
 
+  networking.wireless.iwd.enable = true;
+  networking.networkmanager.wifi.backend = "iwd";
+
   # Timezone and Locale
   time.timeZone = "Europe/Madrid";
   #i18n.defaultLocale = "en_US.UTF-8";
@@ -57,7 +60,7 @@
     fcitx5.addons = with pkgs; [
         fcitx5-mozc
         fcitx5-gtk
-        fcitx5-configtool
+        qt6Packages.fcitx5-configtool
     ];
 };
 
@@ -241,7 +244,7 @@ environment.variables = {
     p7zip # 7zip
     home-manager # Useful to have the CLI available
     # --- steam realated pkgs ---
-    protonup
+    protonup-ng
     mangohud
     # --- unity for game dev ---
     unityhub
