@@ -62,6 +62,8 @@
     prismlauncher
     # --- terminal file manager ---
     inputs.superfile.packages.${pkgs.stdenv.hostPlatform.system}.default # file manager
+    # --- Stormy (Weather forecast)
+    inputs.stormy.packages.${pkgs.stdenv.hostPlatform.system}.stormy
     #
     pulseaudio
     # For C# Language Server
