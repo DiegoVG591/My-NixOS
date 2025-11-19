@@ -17,6 +17,10 @@
     superfile = {
       url = "github:yorukot/superfile";
     };
+    # Add Stormy (Weather forecast)
+    stormy = {
+      url = "github:ashish0kumar/stormy";
+    };
   };
 
   outputs = { nixpkgs, home-manager, superfile, ... }@inputs:
