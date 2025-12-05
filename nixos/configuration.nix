@@ -186,6 +186,111 @@ environment.variables = {
     gamescopeSession.enable = true;
   };
   
+    # --- Nix-LD (Run unpatched binaries like MCEF/Minecraft Browsers) ---
+# --- Nix-LD (Run unpatched binaries like Minecraft Browsers & Unity) ---
+  programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = with pkgs; [
+    # --- Basics ---
+    zlib
+    zstd
+    stdenv.cc.cc
+    curl
+    openssl
+    attr
+    libssh
+    bzip2
+    libxml2
+    acl
+    libsodium
+    util-linux
+    xz
+    systemd
+
+    # --- Xorg Libraries (FIXED: Added 'xorg.' prefix where needed) ---
+    xorg.libX11
+    xorg.libXcomposite
+    xorg.libXdamage
+    xorg.libXext
+    xorg.libXfixes
+    xorg.libXrandr
+    xorg.libXtst
+    xorg.libxcb
+    xorg.libxshmfence  # <--- This was the cause of your error!
+    xorg.libXxf86vm
+    xorg.libXinerama
+    xorg.libXcursor
+    xorg.libXrender
+    xorg.libXScrnSaver
+    xorg.libXi
+    xorg.libSM
+    xorg.libICE
+    xorg.libXt
+    xorg.libXmu
+    xorg.libXft
+
+    # --- Graphics & Audio ---
+    libGL
+    libva
+    pipewire
+    libdrm
+    libgbm
+    vulkan-loader
+    alsa-lib
+    libpulseaudio
+
+    # --- Glitch/Crash Fixes ---
+    glib
+    gtk2
+    gtk3
+    gdk-pixbuf
+    cairo
+    pango
+    at-spi2-atk
+    at-spi2-core
+    dbus
+    dbus-glib
+    expat
+    libxkbcommon 
+
+    # --- Game/Runtime Support ---
+    libelf
+    nspr
+    nss
+    cups
+    libcap
+    SDL2
+    libusb1
+    ffmpeg
+    libudev0-shim
+    icu
+    libnotify
+    
+    # --- Image/Audio Formats ---
+    libogg
+    libvorbis
+    flac
+    freeglut
+    libjpeg
+    libpng
+    libsamplerate
+    libmikmod
+    libtheora
+    libtiff
+    pixman
+    speex
+    
+    # --- Networking/Utils ---
+    networkmanager
+    libxcrypt
+    coreutils
+    pciutils
+    zenity
+    
+    # --- Compatibility ---
+    fuse
+    e2fsprogs
+  ];
+
   programs.gamemode.enable = true;
   hardware.steam-hardware.enable = true;
 
