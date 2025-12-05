@@ -362,6 +362,8 @@ environment.variables = {
     android-tools # for modifing things on Andrid (will use it for installing grapheno)
     # --- Media player open source ---
     vlc
+    # --- Image viewer ---
+    nsxiv
     # linuxKernel.kernels.linux_zen # Consider if you need a specific kernel, default is usually fine
     # adding partition format types
     exfatprogs # exfat
