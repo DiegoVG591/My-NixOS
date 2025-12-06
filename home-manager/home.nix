@@ -44,6 +44,8 @@
     tmux
     # --- Image editors ---
     gimp3
+    # --- media convertor ---
+    ffmpeg-full
     # --- languages --
     selene # for linting
     python314
