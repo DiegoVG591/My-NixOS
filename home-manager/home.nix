@@ -148,6 +148,8 @@
   # --- OBS ---
   programs.obs-studio = {
     enable = true;
+    # Force OBS to build with Nvidia CUDA/NVENC support
+    package = pkgs.obs-studio.override { cudaSupport = true; };
     plugins = with pkgs.obs-studio-plugins; [
       wlrobs
       obs-backgroundremoval
