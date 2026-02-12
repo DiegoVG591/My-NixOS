@@ -113,6 +113,7 @@ plugins=(git)
   # open superfile
   alias spf='superfile'
   alias rmhs='find ~ -name "*_hyprshot.png" -delete'
+  alias kill-davinci='pkill -9 -f "davinci|resolve|bwrap"'
   # alias rmVods='find ~/vods -name "*.mp4" -delete' !!!!!! Be carfull do not uncomment this untill you have made a script that hives a warning to the user to make sure he wants to delet the files, and asks twise, while listing all files to be deleted 
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
