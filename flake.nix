@@ -33,6 +33,9 @@
         specialArgs = { inherit inputs system superfile; }; # Pass inputs and system to modules
         modules = [
           ./nixos/configuration.nix
+          {
+            nixpkgs.config.allowUnfree = true; # Force it at the flake level
+          }
         ];
       };
     };

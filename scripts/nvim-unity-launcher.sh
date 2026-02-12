@@ -1,15 +1,20 @@
 #!/usr/bin/env bash
 
-# This script acts as a bridge between Unity and your terminal editor.
+# 1. Grab the file path Unity sends
+FILEPATH="$1"
 
-# Exit if no file path is provided by Unity.
-if [ -z "$1" ]; then
-    echo "Was not able to open ghostty properly"
+# Exit if no file path is provided.
+if [ -z "$FILEPATH" ]; then
+    echo "Error: No file path provided by Unity."
     exit 1
 fi
 
-# The main command. We've added the echo and sleep commands before nvim.
-# - The file path from Unity is the first argument ($1).
-# - We sleep for 7 seconds.
-# - "$@" passes all arguments from Unity (file, line, etc.) to nvim.
-ghostty -e "nvim '$1'; exec zsh"
+# 2. CRITICAL FIX: Find the Project Root
+# This strips the path at "/Assets", giving us the actual project folder.
+# Example: /home/user/Game/Assets/Script.cs -> /home/user/Game
+PROJECT_PATH="${FILEPATH%%/Assets*}"
+
+# 3. Launch Ghostty
+# --working-directory: Forces nvim to launch in the Project Root (Fixes the Sync Plugin)
+# -e: Executes nvim directly.
+ghostty --working-directory="$PROJECT_PATH" -e nvim "$FILEPATH"

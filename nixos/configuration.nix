@@ -51,6 +51,16 @@
   networking.wireless.iwd.enable = true;
   networking.networkmanager.wifi.backend = "iwd";
 
+  # --- firewall ---
+  networking.firewall = {
+    enable = true;
+    # Minecraft default port (TCP)
+    allowedTCPPorts = [ 25565 ]; 
+    # Voice Chat mods usually use UDP 24454. 
+    # If your friend can't hear you, this is why.
+    allowedUDPPorts = [ 24454 ]; 
+  };
+
   # Timezone and Locale
   time.timeZone = "Europe/Madrid";
   #i18n.defaultLocale = "en_US.UTF-8";
@@ -171,6 +181,9 @@ environment.variables = {
     shell = pkgs.zsh; # Set Zsh as the default shell
   };
 
+  # temporary
+  services.flatpak.enable = true;
+
   # Personal pkgs you might not want
   programs.wireshark.enable = true;
 
@@ -215,7 +228,7 @@ environment.variables = {
     xorg.libXrandr
     xorg.libXtst
     xorg.libxcb
-    xorg.libxshmfence  # <--- This was the cause of your error!
+    xorg.libxshmfence
     xorg.libXxf86vm
     xorg.libXinerama
     xorg.libXcursor
@@ -302,24 +315,15 @@ environment.variables = {
     options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
   '';
   # --- Davinci resolve ---
-  nixpkgs.overlays = [
-    (final: prev: {
-      # We are creating a modified version of the davinci-resolve package
-      davinci-resolve = prev.davinci-resolve.overrideAttrs (oldAttrs: {
-        # After installing the package, this hook creates a wrapper script
-        postInstall = ''
-          makeWrapper $out/bin/resolve $out/bin/davinci-resolve \
-            --set QT_QPA_PLATFORM xcb
-        '';
-      });
-    })
-  ];
 
   # System-wide Zsh (makes it available, provides /etc/zshrc)
   programs.zsh.enable = true;
   # Fan argb controler
   services.hardware.openrgb.enable = true;
   boot.kernelModules = [ "i2c-dev" ];
+
+  # Expressvpn enable
+  services.expressvpn.enable = true;
 
   
   # Nix Flakes
@@ -357,11 +361,17 @@ environment.variables = {
     jetbrains.clion
     # --- not taking ---
     obsidian
+    # --- Language learning ---
+    anki
     # --- others ---
-    davinci-resolve # video editor
+    # video editor
     android-tools # for modifing things on Andrid (will use it for installing grapheno)
+    # --- VPN ---
+    expressvpn
     # --- Media player open source ---
     vlc
+    mpv # Audio for anki
+    pavucontrol
     # --- Image viewer ---
     nsxiv
     # linuxKernel.kernels.linux_zen # Consider if you need a specific kernel, default is usually fine
@@ -371,7 +381,23 @@ environment.variables = {
     # --- Fan arg and speed control ---
     fanctl
     openrgb-with-all-plugins
+    # temporary pkgs
+    flatpak
   ];
+
+    # --- Font Config ---
+    fonts.fontDir.enable = true;
+
+    fonts.packages = with pkgs; [
+    rictydiminished-with-firacode
+    noto-fonts
+    monocraft
+    font-awesome
+  ] ++ (
+    # This adds all Nerd Fonts
+    builtins.filter lib.attrsets.isDerivation (lib.attrValues pkgs.nerd-fonts)
+  );
+  
 
   system.stateVersion = "25.05";
 }

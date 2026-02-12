@@ -8,6 +8,8 @@
   home.sessionPath = [
     "$HOME/.local/bin"
   ];
+
+  nixpkgs.config.allowUnfree = true;
   
   systemd.user.services."create-virtual-mic" = {
     Unit = {
@@ -56,6 +58,8 @@
     nodejs # This provides npm
     dotnet-sdk
     jdk
+    # Content creation stuff
+    davinci-resolve # Video Editor
     # --- Cybersecurity pkgs --
     wireshark
     nmap
@@ -81,16 +85,56 @@
     heroic
     pavucontrol
     # --- Fonts ---
-    font-awesome
-    noto-fonts
-    monocraft
-    rictydiminished-with-firacode
-  ] ++ (
-    # Add all Nerd Fonts
-    builtins.filter lib.attrsets.isDerivation (lib.attrValues pkgs.nerd-fonts)
-  );
+        # font-awesome
+        # noto-fonts
+        # monocraft
+        # rictydiminished-with-firacode
+    # --- INSERT NVIM UNITY HERE ---
+    (writeShellScriptBin "nvimunity" ''
+       #!/bin/sh
+       # We add the required tools to the path specifically for this script
+       export PATH="${pkgs.jq}/bin:${pkgs.xdotool}/bin:$PATH"
 
-  fonts.fontconfig.enable = true;
+       CONFIG_DIR="$HOME/.config/nvim-unity"
+       CONFIG_FILE="$CONFIG_DIR/config.json"
+       NVIM_PATH="nvim"
+       SOCKET="$HOME/.cache/nvimunity.sock"
+       mkdir -p "$CONFIG_DIR"
+        
+       if [ ! -f "$CONFIG_FILE" ]; then
+         echo '{"last_project": ""}' > "$CONFIG_FILE"
+       fi
+        
+       LAST_PROJECT=$(jq -r '.last_project' "$CONFIG_FILE")
+        
+       FILE="$1"
+       # Note the double single-quotes ''${...} for Nix escaping
+       LINE="''${2:-1}"
+        
+       if ! [[ "$LINE" =~ ^[1-9][0-9]*$ ]]; then
+         LINE="1"
+       fi
+        
+       SHIFT_PRESSED=false
+       if command -v xdotool >/dev/null; then
+         xdotool keydown Shift_L keyup Shift_L >/dev/null 2>&1 && SHIFT_PRESSED=true
+       fi
+        
+       if [ "$SHIFT_PRESSED" = true ] && [ -n "$LAST_PROJECT" ]; then
+         CMD="$NVIM_PATH --listen $SOCKET \"+$LINE\" \"+cd \"$LAST_PROJECT\"\" \"$FILE\""
+       else
+         CMD="$NVIM_PATH --listen $SOCKET \"+$LINE\" \"$FILE\""
+       fi
+        
+       eval "$CMD"
+    '')
+  ];
+        # ] ++ (
+        #   # Add all Nerd Fonts
+        #   builtins.filter lib.attrsets.isDerivation (lib.attrValues pkgs.nerd-fonts)
+        # );
+
+        # fonts.fontconfig.enable = true;
 
   home.sessionVariables = {
     EDITOR = "nvim";
@@ -108,6 +152,14 @@
     # any other config you would like to add
   }; 
 
+  # --- File pointers ---
+
+  # davinci-resolve
+  home.file.".local/share/applications/davinci-resolve.desktop" = {
+    source = ../CustomEx/davinci-resolve.desktop;
+  };
+
+  # zsh
   home.file.".zshrc.personal" = {
     source = ../zsh/.zshrc.personal;
   };
