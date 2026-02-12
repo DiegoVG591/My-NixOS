@@ -4,7 +4,7 @@ GenericName=DaVicni Resolve
 Exec=env ROC_ENABLE_PRE_VEGA=1 RUSTICL_ENABLE=amdgpu,amdgpu-pro,radv,radeon DRI_PRIME=1 QT_QPA_PLATFORM=xcb __NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia davinci-resolve %u
 Type=Application
 Terminal=false
-Icon=utilities-terminal
+Icon=/nix/store/c1nyah3sl2zz4n6vkdpnxybc2y260r74-davinci-resolve-20.0.1/graphics/DV_Resolve.png
 StartupNotify=true
 StartupWMClass=resolve
 MimeType=application/x-resolveproj; 
