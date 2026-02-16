@@ -1,12 +1,9 @@
-# In /home/krieg/mysystem/home-manager/modules/obs-virtual-mic.nix
-
 { config, pkgs, ... }:
 
 {
-  # Ensure the user's PipeWire service is active
-  services.pipewire.enable = true;
+  # REMOVE the services.pipewire.enable = true; line. 
+  # It doesn't exist in Home Manager and you already enabled it in your system config.
 
-  # This block creates the configuration file for our virtual mic
   xdg.configFile."pipewire/pipewire.conf.d/10-virtual-mic.conf" = {
     text = ''
       context.modules = [

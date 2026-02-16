@@ -10,30 +10,7 @@
   ];
 
   nixpkgs.config.allowUnfree = true;
-  
-  systemd.user.services."create-virtual-mic" = {
-    Unit = {
-      Description = "Create a PipeWire loopback device for OBS";
-      # We now depend on the native pipewire service
-      After = [ "pipewire.service" ];
-    };
-  
-    Service = {
-      # This uses PipeWire's native tool, pw-cli, to load the loopback module.
-      # This is the most direct and reliable method.
-      ExecStart = ''
-        ${pkgs.pipewire}/bin/pw-cli load-module libpipewire-module-loopback \
-        node.description="OBS-Virtual-Audio" \
-        capture.props={node.description="Virtual-Mic-Source-(from-OBS)"} \
-        playback.props={node.description="Virtual-Mic-Sink-(to-OBS)"}
-      '';
-    };
-  
-    Install = {
-      WantedBy = [ "default.target" ];
-    };
-  };
-  
+
   home.packages = with pkgs; [
     hello
     tree
@@ -178,6 +155,7 @@
 
   # --- Zen browser ---
   imports = [
+    ./modules/obs-virtual-mic.nix
     inputs.zen-browser.homeModules.beta
     # or inputs.zen-browser.homeModules.twilight
     # or inputs.zen-browser.homeModules.twilight-official

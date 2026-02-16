@@ -115,6 +115,7 @@ plugins=(git)
   alias rmhs='find ~ -name "*_hyprshot.png" -delete'
   alias kill-davinci='pkill -9 -f "davinci|resolve|bwrap"'
   alias dnx-convert='~/mysystem/scripts/DNX_Convert.sh'
+  alias man-virtualMic="cat ~/mysystem/docs/virtual_mic_setup.txt"
   # alias rmVods='find ~/vods -name "*.mp4" -delete' !!!!!! Be carfull do not uncomment this untill you have made a script that hives a warning to the user to make sure he wants to delet the files, and asks twise, while listing all files to be deleted 
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
