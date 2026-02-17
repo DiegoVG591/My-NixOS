@@ -23,8 +23,9 @@
     tmux
     # --- Image editors ---
     gimp3
-    # --- media convertor ---
+    # --- media download & conversion ---
     ffmpeg-full
+    yt-dlp
     # --- languages --
     selene # for linting
     python314

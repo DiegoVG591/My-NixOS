@@ -91,7 +91,6 @@ environment.variables = {
     # package = pkgs.hyprland; # Optionally specify a different Hyprland package if needed
   };
 
-  programs.adb.enable = true;
 
   # Login Manager for Hyprland (using greetd as a lightweight option)
   services.greetd = {
@@ -220,26 +219,26 @@ environment.variables = {
     systemd
 
     # --- Xorg Libraries (FIXED: Added 'xorg.' prefix where needed) ---
-    xorg.libX11
-    xorg.libXcomposite
-    xorg.libXdamage
-    xorg.libXext
-    xorg.libXfixes
-    xorg.libXrandr
-    xorg.libXtst
-    xorg.libxcb
-    xorg.libxshmfence
-    xorg.libXxf86vm
-    xorg.libXinerama
-    xorg.libXcursor
-    xorg.libXrender
-    xorg.libXScrnSaver
-    xorg.libXi
-    xorg.libSM
-    xorg.libICE
-    xorg.libXt
-    xorg.libXmu
-    xorg.libXft
+    libx11
+    libxcomposite
+    libxdamage
+    libxext
+    libxfixes
+    libxrandr
+    libxtst
+    libxcb
+    libxshmfence
+    libxxf86vm
+    libxinerama
+    libxcursor
+    libxrender
+    libxscrnsaver
+    libxi
+    libsm
+    libice
+    libxt
+    libxmu
+    libxft
 
     # --- Graphics & Audio ---
     libGL
@@ -359,6 +358,8 @@ environment.variables = {
     unityhub
     # --- temporary IDEs
     jetbrains.clion
+    # --- pkg for adb command ---
+    android-tools
     # --- not taking ---
     obsidian
     # --- Language learning ---
