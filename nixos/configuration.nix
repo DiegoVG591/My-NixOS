@@ -79,6 +79,12 @@ environment.variables = {
   QT_IM_MODULE = "fcitx";
   XMODIFIERS = "@im=fcitx";
   GLFW_IM_MODULE = "ibus";
+  DEFAULT_BROWSER = "zen";
+  BROWSER = "zen";
+  MOZ_ENABLE_WAYLAND = "1";
+  AUDIO_PLAYER = "mpv";
+  TERMINAL = "ghostty";
+  EDITOR = "nvim";
 };
 
   # --- Graphics & Display ---
@@ -96,13 +102,15 @@ environment.variables = {
   services.greetd = {
     enable = true;
     settings = {
+      initial_session = {
+        command = "${pkgs.bash}/bin/bash -l -c 'sleep 1; dbus-run-session Hyprland'";
+        user = "krieg";
+      };
       default_session = {
-        command = "${pkgs.hyprland}/bin/Hyprland";
-        user = "krieg"; # Your username
+        command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd Hyprland";
+        user = "krieg";
       };
     };
-    # You can choose different greeters, e.g., tuigreet for a console look
-    # extraPackages = [ pkgs.greetd.tuigreet ]; # Add if you want tuigreet
   };
 
   # If you prefer a graphical login like SDDM:
@@ -131,6 +139,13 @@ environment.variables = {
     OFX_PLUGIN_PATH = lib.concatStringsSep ":" [
       # "${pkgs.openfx-misc}"
     ];
+    # Force Hyprland apps to see the NixOS icon paths
+    XDG_DATA_DIRS = [ 
+      "${pkgs.adwaita-icon-theme}/share"
+      "/run/current-system/sw/share"
+      "/etc/profiles/per-user/krieg/share"
+    ];
+    HYPRLAND_LOG_WLR = "1";
     # MOZ_ENABLE_WAYLAND = "1"; # For Firefox
     # QT_QPA_PLATFORM = "wayland"; # For Qt apps
     # SDL_VIDEODRIVER = "wayland";
@@ -141,9 +156,14 @@ environment.variables = {
   # XDG Desktop Portals (for Flatpak, screen sharing, etc. in Wayland)
   xdg.portal = {
     enable = true;
-    wlr.enable = true; # For wlroots-based compositors like Hyprland
-    # gtk portal is also useful
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    
+    # Fixed syntax: added '=' and used correct attribute mapping
+    config = {
+      common = {
+        default = [ "hyprland" "gtk" ];
+      };
+    };
   };
 
   # sound
@@ -340,6 +360,8 @@ environment.variables = {
     }))
     dunst      # Notification daemon
     libnotify  # For sending notifications
+    # file manager
+    superfile
     # swww       # Wallpaper daemon for Wayland (if you use it)
     # rofi-wayland # Application launcher (Wayland-compatible Rofi fork)
     # wofi     # Another common Wayland launcher
@@ -365,7 +387,6 @@ environment.variables = {
     # --- Language learning ---
     anki
     # --- others ---
-    # video editor
     android-tools # for modifing things on Andrid (will use it for installing grapheno)
     # --- VPN ---
     expressvpn

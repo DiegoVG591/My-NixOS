@@ -13,24 +13,20 @@
       # Make zen-browser use the same nixpkgs as the rest of your system
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Add the superfile flake as a new input
-    superfile = {
-      url = "github:yorukot/superfile";
-    };
     # Add Stormy (Weather forecast)
     stormy = {
       url = "github:ashish0kumar/stormy";
     };  
   };
 
-  outputs = { nixpkgs, home-manager, superfile, ... }@inputs:
+  outputs = { nixpkgs, home-manager, ... }@inputs:
   let
     system = "x86_64-linux";
   in
   {
     nixosConfigurations = {
       myNixos = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs system superfile; }; # Pass inputs and system to modules
+        specialArgs = { inherit inputs system; }; # Pass inputs and system to modules
         modules = [
           ./nixos/configuration.nix
           {

@@ -1,5 +1,5 @@
 # Path: /home/krieg/mysystem/home-manager/home.nix
-{ config, pkgs, lib, inputs, superfile, ... }: # Ensure 'lib' is included
+{ config, pkgs, lib, inputs, ... }: # Ensure 'lib' is included
 
 {
   home.username = "krieg";
@@ -44,8 +44,6 @@
     nginx
     # --- Minecraft launcher ---
     prismlauncher
-    # --- terminal file manager ---
-    inputs.superfile.packages.${pkgs.stdenv.hostPlatform.system}.default # file manager
     # --- Stormy (Weather forecast)
     inputs.stormy.packages.${pkgs.stdenv.hostPlatform.system}.stormy
     #
@@ -188,6 +186,16 @@
     ];
   };  
 
+  # --- DEFAULT OPENERS ---
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      "image/jpeg" = [ "nsxiv.desktop" ];
+      "image/png" = [ "nsxiv.desktop" ];
+      "image/gif" = [ "nsxiv.desktop" ];
+      "image/webp" = [ "nsxiv.desktop" ];
+    };
+  };
 
   home.stateVersion = "24.05"; # Or "24.11" if you are sure
   programs.home-manager.enable = true;
