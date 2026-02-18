@@ -1,7 +1,35 @@
 # Path: /home/krieg/mysystem/nixos/configuration.nix
 { inputs, config, lib, pkgs, ... }:
 
+let
+  # --- USER CONFIG: Change your headset name here ---
+  myHeadset = "alsa_output.usb-Razer_Razer_Barracuda_X-00.analog-stereo";
+in
 {
+  # --- 1. Pipewire & WirePlumber Priority Rules ---
+  services.pipewire.wireplumber.extraConfig."10-priority-rules" = {
+    "monitor.alsa.rules" = [
+      {
+        matches = [ { "node.name" = "${myHeadset}"; } ];
+        actions = {
+          update-props = {
+            "priority.driver" = 2000;
+            "priority.session" = 2000;
+            "device.profile" = "stereo-fallback"; 
+          };
+        };
+      }
+      {
+        matches = [ { "node.name" = "~alsa_output.usb-Generic_Blue_Microphones.*"; } ];
+        actions = {
+          update-props = {
+            "priority.driver" = 500;
+            "priority.session" = 500;
+          };
+        };
+      }
+    ];
+  };
   imports = [
     ./hardware-configuration.nix
     inputs.home-manager.nixosModules.home-manager
@@ -43,6 +71,7 @@
     # Use the stable driver package from your kernel's package set
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
+
 
   # Networking
   networking.hostName = "nixos"; # You can uncomment and set this

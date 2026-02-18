@@ -18,6 +18,8 @@
             playback.props = {
               node.description = "Virtual Mic (to OBS)"
               audio.position = [ FL FR ]
+              # KEY CHANGE: Stop auto-routing to speakers/sinks
+              node.autoconnect = false
             }
           }
         }

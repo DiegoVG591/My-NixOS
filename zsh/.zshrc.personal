@@ -17,6 +17,28 @@ if [[ $? -ne 0 ]]; then
   echo "Failed to load theme, using basic prompt."
   PROMPT='%n@%m %~ %# '
 fi
+
+#################
+## VIRTUAL MIC ##
+#################
+
+toggle-monitor() {
+    local SINK="alsa_output.usb-Razer_Razer_Barracuda_X-00.analog-stereo"
+    local OBS="output.OBS-Virtual-Mic"
+    
+    # Check if the specific connection exists by looking at the output of pw-link -l
+    # We use -P for perl-regex to handle the multi-line/arrow formatting Pipewire uses
+    if pw-link -l | grep -A 1 "$OBS:output_FL" | grep -q "$SINK:playback_FL"; then
+        echo "🔇 Monitoring OFF"
+        pw-link -d "$OBS:output_FL" "$SINK:playback_FL"
+        pw-link -d "$OBS:output_FR" "$SINK:playback_FR"
+    else
+        echo "🎧 Monitoring ON"
+        pw-link "$OBS:output_FL" "$SINK:playback_FL"
+        pw-link "$OBS:output_FR" "$SINK:playback_FR"
+    fi
+}
+
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
 # a theme from this variable instead of looking in $ZSH/themes/
@@ -106,16 +128,19 @@ plugins=(git)
 #
 # Example aliases
   alias update-myNixos='sudo nixos-rebuild switch --flake /home/krieg/mysystem#myNixos'
-  # Creates the virtual audio cable by running our script
-  alias create-cable="/home/krieg/mysystem/VM-MicScrit/virtualMic.sh"
-  # Removes all virtual devices created by the script
-  alias destroy-cable="pactl unload-module module-null-sink"
   # open superfile
   alias spf='superfile'
+  # RM screen shots
   alias rmhs='find ~ -name "*_hyprshot.png" -delete'
+  # Force kill davinci
   alias kill-davinci='pkill -9 -f "davinci|resolve|bwrap"'
+  # DNX Convertor
   alias dnx-convert='~/mysystem/scripts/DNX_Convert.sh'
+  # Virtual mic
+  export MAIN_SINK="alsa_output.usb-Razer_Razer_Barracuda_X-00.analog-stereo"
+
   alias man-virtualMic="cat ~/mysystem/docs/virtual_mic_setup.txt"
-  # alias rmVods='find ~/vods -name "*.mp4" -delete' !!!!!! Be carfull do not uncomment this untill you have made a script that hives a warning to the user to make sure he wants to delet the files, and asks twise, while listing all files to be deleted 
+  alias mon-on="pw-link output.OBS-Virtual-Mic:output_FL $MAIN_SINK:playback_FL && pw-link output.OBS-Virtual-Mic:output_FR $MAIN_SINK:playback_FR"
+  alias mon-off="pw-link -d output.OBS-Virtual-Mic:output_FL $MAIN_SINK:playback_FL && pw-link -d output.OBS-Virtual-Mic:output_FR $MAIN_SINK:playback_FR"# alias rmVods='find ~/vods -name "*.mp4" -delete' !!!!!! Be carfull do not uncomment this untill you have made a script that hives a warning to the user to make sure he wants to delet the files, and asks twise, while listing all files to be deleted 
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
