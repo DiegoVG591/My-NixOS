@@ -1,4 +1,4 @@
-##🔧 Upcoming Refactor##
+##🔧 Upcoming Refactor
 
 This Nix configuration will finally be refactored.
 I will be beginning the refactoring sometime this month to try to make it modular.
