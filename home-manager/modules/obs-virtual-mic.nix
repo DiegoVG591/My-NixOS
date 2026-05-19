@@ -1,26 +1,40 @@
 { config, pkgs, ... }:
-
 {
-  # REMOVE the services.pipewire.enable = true; line. 
-  # It doesn't exist in Home Manager and you already enabled it in your system config.
-
   xdg.configFile."pipewire/pipewire.conf.d/10-virtual-mic.conf" = {
     text = ''
-      context.modules = [
+      context.objects = [
         {
-          name = libpipewire-module-loopback
+          factory = adapter
           args = {
-            node.name = "OBS-Virtual-Mic"
-            capture.props = {
-              node.description = "Virtual Mic (from OBS)"
-              audio.position = [ FL FR ]
-            }
-            playback.props = {
-              node.description = "Virtual Mic (to OBS)"
-              audio.position = [ FL FR ]
-              # KEY CHANGE: Stop auto-routing to speakers/sinks
-              node.autoconnect = false
-            }
+            factory.name     = support.null-audio-sink
+            node.name        = "VirtualMicSink"
+            node.description = "Virtual Mic Sink"
+            media.class      = "Audio/Sink"
+            audio.position   = [ FL FR ]
+            monitor.channel-volumes = true
+            monitor.passthrough = true
+          }
+        }
+        {
+          factory = adapter
+          args = {
+            factory.name     = support.null-audio-sink
+            node.name        = "VirtualMic"
+            node.description = "Virtual Microphone"
+            media.class      = "Audio/Duplex"
+            audio.position   = [ FL FR ]
+          }
+        }
+        {
+        factory = adapter
+          args = {
+            factory.name     = support.null-audio-sink
+            node.name        = "SoundboardSink"
+            node.description = "Soundboard"
+            media.class      = "Audio/Sink"
+            audio.position   = [ FL FR ]
+            monitor.channel-volumes = true
+            monitor.passthrough = true
           }
         }
       ]

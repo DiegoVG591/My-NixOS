@@ -60,6 +60,8 @@
     # --- game launchers ---
     heroic
     pavucontrol
+    # --- Auto Clicker ---
+    ydotool
     # --- Fonts ---
         # font-awesome
         # noto-fonts
@@ -105,6 +107,24 @@
        eval "$CMD"
     '')
   ];
+
+  systemd.user.services.virtual-mic-link = {
+    Unit.Description = "Link VirtualMicSink to VirtualMic";
+    Install.WantedBy = [ "default.target" ];
+    Service = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = "${pkgs.writeShellScript "virtual-mic-link" ''
+      for i in $(seq 1 15); do
+        if ${pkgs.pipewire}/bin/pw-link VirtualMicSink:monitor_0 VirtualMic:playback_0 2>/dev/null; then
+          ${pkgs.pipewire}/bin/pw-link VirtualMicSink:monitor_1 VirtualMic:playback_1
+          exit 0
+        fi
+        sleep 2
+      done
+    ''}";
+    };
+  };
         # ] ++ (
         #   # Add all Nerd Fonts
         #   builtins.filter lib.attrsets.isDerivation (lib.attrValues pkgs.nerd-fonts)
@@ -155,6 +175,7 @@
   # --- Zen browser ---
   imports = [
     ./modules/obs-virtual-mic.nix
+    ./modules/meeting-reminders.nix
     inputs.zen-browser.homeModules.beta
     # or inputs.zen-browser.homeModules.twilight
     # or inputs.zen-browser.homeModules.twilight-official
@@ -194,6 +215,9 @@
       "image/png" = [ "nsxiv.desktop" ];
       "image/gif" = [ "nsxiv.desktop" ];
       "image/webp" = [ "nsxiv.desktop" ];
+      "video/mp4" = [ "vlc.desktop" ];
+      "video/x-matroska" = [ "vlc.desktop" ];
+      "video/webm" = [ "vlc.desktop" ];
     };
   };
 

@@ -30,6 +30,38 @@ in
       }
     ];
   };
+  services.pipewire.wireplumber.extraConfig."20-virtual-mic-link" = {
+    "wireplumber.links" = [
+      {
+        "link.output.node" = "VirtualMicSink";
+        "link.output.port" = "monitor_0";
+        "link.input.node"  = "VirtualMic";
+        "link.input.port"  = "playback_0";
+      }
+      {
+        "link.output.node" = "VirtualMicSink";
+        "link.output.port" = "monitor_1";
+        "link.input.node"  = "VirtualMic";
+        "link.input.port"  = "playback_1";
+      }
+    ];
+  };
+  services.pipewire.wireplumber.extraConfig."30-discord-mic-routing" = {
+    "wireplumber.settings" = {
+      "linking.allow-moving-streams" = false;
+    };
+    "node.rules" = [
+      {
+        matches = [ { "node.name" = "~alsa_input.usb-Generic_Blue_Microphones.*"; } ];
+        actions = {
+          update-props = {
+            "node.autoconnect" = false;
+          };
+        };
+      }
+    ];
+  };
+
   imports = [
     ./hardware-configuration.nix
     inputs.home-manager.nixosModules.home-manager
@@ -71,7 +103,7 @@ in
     # Use the stable driver package from your kernel's package set
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
-
+boot.kernelParams = [ "pcie_aspm=off" ];
 
   # Networking
   networking.hostName = "nixos"; # You can uncomment and set this
@@ -88,6 +120,36 @@ in
     # Voice Chat mods usually use UDP 24454. 
     # If your friend can't hear you, this is why.
     allowedUDPPorts = [ 24454 ]; 
+  };
+
+  # --- Services ---
+  systemd.services.ydotoold = {
+    description = "ydotool daemon";
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      ExecStart = "${pkgs.ydotool}/bin/ydotoold --socket-path=/run/ydotoold.socket --socket-perm=0660";
+      RuntimeDirectory = "ydotoold";
+      User = "root";
+      Group = "input";
+      Restart = "always";
+    };
+  };
+
+  # Force Ethernet enp4s0 to Gigabit Speed (Delayed for NetworkManager)
+  systemd.services.force-gigabit = {
+    description = "Force Ethernet enp4s0 to Gigabit";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network-online.target" "NetworkManager.service" ];
+    requires = [ "network-online.target" ];
+    path = [ pkgs.ethtool ];
+    script = ''
+      sleep 10
+      ethtool -s enp4s0 speed 1000 duplex full autoneg on
+    '';
+    serviceConfig = {
+      Type = "simple";
+      RemainAfterExit = true;
+    };
   };
 
   # Timezone and Locale
@@ -114,6 +176,7 @@ environment.variables = {
   AUDIO_PLAYER = "mpv";
   TERMINAL = "ghostty";
   EDITOR = "nvim";
+  YDOTOOL_SOCKET = "/run/ydotoold.socket";
 };
 
   # --- Graphics & Display ---
@@ -215,17 +278,26 @@ environment.variables = {
     powerOnBoot = true;
     settings = {
       General = {
-        Enable = "Source,Sink,Media,Socket";
+        FastConnectable = true;
+      };
+      Policy = {
+        AutoEnable = true;
       };
     };
   };
   
+  # Remove the ClassicBondedOnly and Enable lines and add this instead:
+  environment.etc."bluetooth/input.conf".text = lib.mkForce ''
+    [General]
+    ClassicBondedOnly=false
+  '';
+
   # User Definition
   users.users.krieg = {
     isNormalUser = true;
     home = "/home/krieg";
     description = "Krieg GottNMC";
-    extraGroups = [ "wheel" "video" "audio" "networkmanager" "pipewire" "adbusers" "wireshark" ]; # Common groups
+    extraGroups = [ "wheel" "video" "audio" "networkmanager" "pipewire" "adbusers" "wireshark" "input" ]; # Common groups
     shell = pkgs.zsh; # Set Zsh as the default shell
   };
 
@@ -355,20 +427,26 @@ environment.variables = {
   programs.gamemode.enable = true;
   hardware.steam-hardware.enable = true;
 
+  # Internet Drivers
+    boot.kernelPackages = pkgs.linuxPackages_latest;
   # --- OBS ---
   boot.extraModulePackages = with config.boot.kernelPackages; [
+    (callPackage ../pkgs/r8126.nix { kernel = config.boot.kernelPackages.kernel; })
     v4l2loopback
   ];
+  boot.blacklistedKernelModules = [ "r8169" ];
   boot.extraModprobeConfig = ''
     options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
   '';
+
+
   # --- Davinci resolve ---
 
   # System-wide Zsh (makes it available, provides /etc/zshrc)
   programs.zsh.enable = true;
   # Fan argb controler
   services.hardware.openrgb.enable = true;
-  boot.kernelModules = [ "i2c-dev" ];
+  boot.kernelModules = [ "i2c-dev" "v4l2loopback" "snd-aloop"];
 
   # Expressvpn enable
   services.expressvpn.enable = true;
@@ -379,6 +457,7 @@ environment.variables = {
 
   # System Packages (keep minimal, prefer Home Manager for user apps)
   environment.systemPackages = with pkgs; [
+    droidcam
     vim
     wayland # Core Wayland libraries
     hyprland
@@ -389,6 +468,7 @@ environment.variables = {
     }))
     dunst      # Notification daemon
     libnotify  # For sending notifications
+    blueman
     # file manager
     superfile
     # swww       # Wallpaper daemon for Wayland (if you use it)
@@ -419,10 +499,13 @@ environment.variables = {
     android-tools # for modifing things on Andrid (will use it for installing grapheno)
     # --- VPN ---
     expressvpn
+    # --- Wine ---
+    wineWow64Packages.waylandFull
     # --- Media player open source ---
     vlc
     mpv # Audio for anki
     pavucontrol
+    playerctl
     # --- Image viewer ---
     nsxiv
     # linuxKernel.kernels.linux_zen # Consider if you need a specific kernel, default is usually fine
@@ -434,6 +517,10 @@ environment.variables = {
     openrgb-with-all-plugins
     # temporary pkgs
     flatpak
+    openssl
+    pv
+    # auto clicker stuff
+    bc
   ];
 
     # --- Font Config ---
