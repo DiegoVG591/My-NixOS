@@ -1,3 +1,4 @@
+{ config, lib, pkgs, ... }:
 let
     # --- LOCAL VARIABLES --- #
     defaultOutDevice = "alsa_output.usb-Razer_Razer_Barracuda_X-00.analog-stereo";
@@ -22,8 +23,8 @@ let
         };
     };
 in
-    {
-    "10-priority-rules" = {
+{
+    services.pipewire.wireplumber.extraConfig."10-priority-rules" = {
         "monitor.alsa.rules" = [ defaultDevice ignoredDevice ];
     };
 }
