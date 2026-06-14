@@ -28,7 +28,7 @@
       myNixos = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs system; }; # Pass inputs and system to modules
         modules = [
-          ./nixos/configuration.nix
+          ./nix-config/configuration.nix
           {
             nixpkgs.config.allowUnfree = true; # Force it at the flake level
           }

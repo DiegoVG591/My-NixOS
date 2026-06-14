@@ -18,7 +18,7 @@
     # --- HOME MANAGER INTEGRATION --- #
     home-manager = {
         extraSpecialArgs = { inherit inputs; };
-        users.krieg = import ../home-manager/home.nix;
+        users.krieg = import ./home/home.nix;
         backupFileExtension = "hm-backup";
     };
 }
