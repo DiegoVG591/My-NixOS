@@ -84,6 +84,9 @@ in
         nmap
         nginx
 
+        # --- COMMUNICATION --- #
+        discord-ptb
+
         # --- GAMING --- #
         prismlauncher    # Minecraft launcher
         heroic           # Epic/GOG game launcher
