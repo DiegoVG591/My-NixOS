@@ -22,7 +22,7 @@
 
     # --- EXTRA KERNEL MODULES --- #
     boot.extraModulePackages = with config.boot.kernelPackages; [
-        (callPackage ../../../pkgs/r8126.nix { kernel = config.boot.kernelPackages.kernel; }) # RTL8126 5GbE NIC driver
+        (callPackage ../../pkgs/r8126.nix { kernel = config.boot.kernelPackages.kernel; }) # RTL8126 5GbE NIC driver
         v4l2loopback # virtual camera for OBS/DroidCam
     ];
     boot.blacklistedKernelModules = [ "r8169" ]; # blacklist old NIC driver conflicting with r8126
