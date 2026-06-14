@@ -113,7 +113,7 @@
         android-tools    # ADB for Android devices
 
         # --- HARDWARE CONTROL --- #
-        blueman          # Bluetooth manager
+        bluez  # bluetooth CLI tools (bluetoothctl)
         fanctl           # fan speed control
         openrgb-with-all-plugins  # RGB control
 
