@@ -3,20 +3,21 @@
 # Usage:
 #   rmhs [-v] [-p] [year] [month] [day] [hour] [min]
 #   -v → verbose, list files before deleting
-#   -p → preview, open files in nsxiv before deleting
+#   -p → preview, open files in nsxiv, mark with 'm' to delete
 
 SCREENSHOTS_DIR="$HOME/Screenshots"
 
 # --- PARSE FLAGS --- #
 VERBOSE=false
 PREVIEW=false
-while [[ "$1" == -* ]]; do
-    case "$1" in
-        -v) VERBOSE=true; shift ;;
-        -p) PREVIEW=true; shift ;;
-        *) echo "Unknown flag: $1"; exit 1 ;;
+while getopts "vp" opt; do
+    case "$opt" in
+        v) VERBOSE=true ;;
+        p) PREVIEW=true ;;
+        ?) echo "Usage: rmhs [-vp] [year] [month] [day] [hour] [min]"; exit 1 ;;
     esac
 done
+shift $((OPTIND - 1))
 
 # --- PARSE ARGS --- #
 YEAR=$1
@@ -35,7 +36,7 @@ case $# in
     3) PATTERN="$BASE/$YEAR/$MONTH/${YEAR}-${MONTH}-${DAY}-*_hyprshot.png" ;;
     4) PATTERN="$BASE/$YEAR/$MONTH/${YEAR}-${MONTH}-${DAY}-${HOUR}*_hyprshot.png" ;;
     5) PATTERN="$BASE/$YEAR/$MONTH/${YEAR}-${MONTH}-${DAY}-${HOUR}${MIN}*_hyprshot.png" ;;
-    *) echo "Usage: rmhs [-v] [-p] [year] [month] [day] [hour] [min]"; exit 1 ;;
+    *) echo "Usage: rmhs [-vp] [year] [month] [day] [hour] [min]"; exit 1 ;;
 esac
 
 # --- FIND FILES --- #
@@ -46,14 +47,7 @@ if [ -z "$FILES" ]; then
     exit 0
 fi
 
-# --- VERBOSE OUTPUT --- #
-if [ "$VERBOSE" = true ]; then
-    echo "The following files will be deleted:"
-    echo "$FILES"
-    echo ""
-fi
-
-# --- PREVIEW --- #
+# --- PREVIEW MODE --- #
 if [ "$PREVIEW" = true ]; then
     echo "Mark files to delete with 'm', then press 'q' to quit."
     FILES_TO_DELETE=$(nsxiv -o $PATTERN)
@@ -61,7 +55,11 @@ if [ "$PREVIEW" = true ]; then
         echo "No files marked for deletion."
         exit 0
     fi
-    echo ""
+    if [ "$VERBOSE" = true ]; then
+        echo "Files marked for deletion:"
+        echo "$FILES_TO_DELETE"
+        echo ""
+    fi
     read -p "Delete $(echo "$FILES_TO_DELETE" | wc -l) marked files? (y/N): " confirm
     if [ "$confirm" = "y" ] || [ "$confirm" = "Y" ]; then
         echo "$FILES_TO_DELETE" | xargs rm
@@ -70,6 +68,13 @@ if [ "$PREVIEW" = true ]; then
         echo "Aborted."
     fi
     exit 0
+fi
+
+# --- VERBOSE OUTPUT --- #
+if [ "$VERBOSE" = true ]; then
+    echo "The following files will be deleted:"
+    echo "$FILES"
+    echo ""
 fi
 
 # --- CONFIRM --- #
