@@ -63,6 +63,11 @@ in
         clang-tools     # C/C++ language server (clangd)
         cmake
 
+        # --- PERSONAL IDE --- #
+        neovim
+        gcc
+        tree-sitter
+
         # --- IMAGE EDITORS --- #
         gimp3
 

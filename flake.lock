@@ -91,10 +91,27 @@
         "type": "github"
       }
     },
+    "nvim-config": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1763333808,
+        "narHash": "sha256-7MBjxVNpvfZUvQZG/VS7QbmzhYAFm8AtVWKSZuw0D6A=",
+        "owner": "DiegoVG591",
+        "repo": "nvim",
+        "rev": "9694a5a530140663a1065c70233314584afb9bec",
+        "type": "github"
+      },
+      "original": {
+        "owner": "DiegoVG591",
+        "repo": "nvim",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
+        "nvim-config": "nvim-config",
         "stormy": "stormy",
         "zen-browser": "zen-browser"
       }

@@ -17,7 +17,8 @@
     # --- HOME SETTINGS --- #
     home.username = "krieg";
     home.homeDirectory = "/home/krieg";
-    home.stateVersion = "24.05";
+    home.stateVersion = "26.05";
+    home.enableNixpkgsReleaseCheck = false;
 
     # --- SESSION --- #
     home.sessionPath = [ "$HOME/.local/bin" ];

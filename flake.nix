@@ -17,6 +17,11 @@
     stormy = {
       url = "github:ashish0kumar/stormy";
     };  
+    # Add my nvim config
+    nvim-config = {
+      url = "github:DiegoVG591/nvim";
+      flake = false;
+    };
   };
 
   outputs = { nixpkgs, home-manager, ... }@inputs:

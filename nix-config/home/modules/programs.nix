@@ -1,14 +1,5 @@
 { config, pkgs, lib, inputs, ... }:
 {
-    # --- NEOVIM --- #
-    programs.neovim = {
-        enable = true;
-        extraPackages = with pkgs; [
-            gcc
-            tree-sitter
-        ];
-    };
-
     # --- ZSH --- #
     programs.zsh = {
         enable = true;
