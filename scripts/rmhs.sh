@@ -4,7 +4,6 @@
 #   rmhs [-v] [-p] [year] [month] [day] [hour] [min]
 #   -v → verbose, list files before deleting
 #   -p → preview, open files in nsxiv before deleting
-#   # TODO: implement -p flag to preview files in nsxiv before deleting
 
 SCREENSHOTS_DIR="$HOME/Screenshots"
 
@@ -55,8 +54,23 @@ if [ "$VERBOSE" = true ]; then
 fi
 
 # --- PREVIEW --- #
-# TODO: implement -p flag to preview files in nsxiv before deleting
-# nsxiv $PATTERN
+if [ "$PREVIEW" = true ]; then
+    echo "Mark files to delete with 'm', then press 'q' to quit."
+    FILES_TO_DELETE=$(nsxiv -o $PATTERN)
+    if [ -z "$FILES_TO_DELETE" ]; then
+        echo "No files marked for deletion."
+        exit 0
+    fi
+    echo ""
+    read -p "Delete $(echo "$FILES_TO_DELETE" | wc -l) marked files? (y/N): " confirm
+    if [ "$confirm" = "y" ] || [ "$confirm" = "Y" ]; then
+        echo "$FILES_TO_DELETE" | xargs rm
+        echo "Done!"
+    else
+        echo "Aborted."
+    fi
+    exit 0
+fi
 
 # --- CONFIRM --- #
 read -p "Are you sure? (y/N): " confirm
