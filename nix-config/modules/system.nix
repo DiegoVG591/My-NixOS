@@ -26,18 +26,19 @@
         type = "fcitx5";
         enable = true;
         fcitx5.addons = with pkgs; [
-            fcitx5-mozc
-            fcitx5-gtk
-            qt6Packages.fcitx5-configtool
+            fcitx5-mozc                    # Japanese input
+            fcitx5-gtk                     # GTK im module for X11/XWayland GTK apps
+            qt6Packages.fcitx5-configtool  # GUI config tool
         ];
     };
 
     # --- GENERAL VARIABLES --- #
     environment.variables = {
         # --- INPUT METHOD --- #
-        QT_IM_MODULE = "fcitx";
         XMODIFIERS = "@im=fcitx";
-        GLFW_IM_MODULE = "ibus";
+        GTK_IM_MODULE = lib.mkForce "";
+        QT_IM_MODULE = "fcitx";
+        QT_IM_MODULES = "wayland;fcitx";
 
         # --- DEFAULT APPLICATIONS --- #
         DEFAULT_BROWSER = "zen";
@@ -52,11 +53,6 @@
         # --- YDOTOOL --- #
         YDOTOOL_SOCKET = "/run/ydotoold.socket";
     };
-
-    # --- USER PKGS --- #
-    # users.users.krieg.packages = with pkgs; [ # TODO: MOVE TO HOME MODULES
-    #     discord-ptb
-    # ];
 
     # --- ZSH (the main shell I use) --- #
     programs.zsh.enable = true;
