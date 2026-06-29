@@ -130,6 +130,9 @@
         nsxiv            # minimalist image viewer
     ];
 
+    # --- HARDWARE SERVICES --- #
+    services.hardware.openrgb.enable = true; # RGB control daemon + udev rules
+
     # --- FONTS --- #
     fonts.fontDir.enable = true;
     fonts.packages = with pkgs; [
