@@ -13,9 +13,6 @@
         allowedUDPPorts = [ 24454 ]; 
     };
 
-    # --- VPN SERVICE --- #
-    services.expressvpn.enable = true;
-
     # --- FORCE ETHERNET TO GIGABIT SPEED --- #
     systemd.services.force-gigabit = {
         description = "Force Ethernet enp4s0 to Gigabit";

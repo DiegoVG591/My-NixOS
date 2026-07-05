@@ -76,6 +76,9 @@ in
         yt-dlp
         pulseaudio
 
+        # --- AUDIO VISUALIZER --- #
+        cava  # terminal audio visualizer (used by hyprlock equalizer)
+
         # --- CONTENT CREATION --- #
         davinci-resolve  # video editor
 

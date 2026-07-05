@@ -118,7 +118,7 @@
         home-manager     # manage user config via CLI
 
         # --- SECURITY --- #
-        expressvpn       # VPN client
+        (callPackage ../../pkgs/expressvpn.nix {})       # VPN client
 
         # --- SYSTEM UTILS --- #
         openssl
