@@ -1,0 +1,109 @@
+#!/usr/bin/env bash
+
+# Usage: run-src [-p] file (in nvim <leader> + r to run in non pager mode and <leader> + R for pager mode)
+# flag -p is for pager mode for output-heavy non-interactive runs
+
+# --- GLOBAL VARIABLES --- #
+PAGER_MODE=false
+PAUSE_COMMAND="echo; echo -n 'Press ENTER to close pane... '; read -r _"
+
+# --- MAIN --- #
+main() {
+  while getopts "p" flag; do
+    case "$flag" in
+      p) PAGER_MODE=true ;;
+      ?) echo "Usage: run-src [-p] file"
+        exit 1 
+      ;;
+    esac
+  done
+  shift $((OPTIND - 1))
+
+  FILE_PATH="$1"
+
+  if [[ -z "${FILE_PATH}" ]]; then 
+    echo "Usage: run-src [-p] file"
+    exit 1
+  elif  [[ ! -f "${FILE_PATH}" ]]; then
+    echo "No such file, in that directory: ${FILE_PATH}"
+    echo "Usage: run-src [-p] file"
+    exit 1
+  fi
+
+  getFileInfo
+  cd "${DIRECTORY}" || exit 1
+  getCommands
+
+  if [[ -n "${COMPILE_COMMAND}" ]]; then
+      ${COMPILE_COMMAND} || exit 1 # exit if fail to compile
+  fi
+
+  if ${PAGER_MODE}; then
+      tmux split-window -v "${RUN_COMMAND} | less -R"
+      exit 0
+  fi
+  tmux split-window -v "${RUN_COMMAND}; ${PAUSE_COMMAND}"
+}
+
+# --- FUNCS --- #
+getFileInfo() {
+  EXTENSION="${FILE_PATH##*.}"
+  FULL_NAME="${FILE_PATH##*/}"
+  BASE_NAME="${FULL_NAME%.*}"
+  if [[ "$FILE_PATH" == */* ]]; then
+      DIRECTORY="${FILE_PATH%/*}"
+      return
+  fi
+  DIRECTORY="./"
+}
+
+
+# Get run and complie commands
+getCommands() {
+  case "$EXTENSION" in
+    cpp)
+      COMPILE_COMMAND="g++ ${FULL_NAME} -o ${BASE_NAME}"
+      RUN_COMMAND="./${BASE_NAME}"
+      ;;
+    c)
+      COMPILE_COMMAND="gcc ${FULL_NAME} -o ${BASE_NAME}"
+      RUN_COMMAND="./${BASE_NAME}"
+      ;;
+    java)
+      COMPILE_COMMAND="javac ${FULL_NAME}"
+      RUN_COMMAND="java ${BASE_NAME}"
+    ;;
+    py)
+      COMPILE_COMMAND=""
+      RUN_COMMAND="python3 ${FULL_NAME}"
+    ;;
+    *)
+      local file_header
+      file_header=$(head -n 1 "${FULL_NAME}")
+      if [[ "${file_header}" != "#!"* ]]; then
+        echo "Unidentified extension:  ${EXTENSION}"
+        exit 1
+      fi
+      handleShebang
+    ;;
+  esac
+}
+
+handleShebang() {
+    COMPILE_COMMAND=""
+    RUN_COMMAND="./${FULL_NAME}"
+
+    # Saftry check
+    read -p "'${FULL_NAME}' needs +x to run. Grant it? (y/N) " confirm
+    if [[ "$confirm" != [yY] ]]; then
+        echo "Aborted."
+        exit 1
+    fi
+
+    chmod +x "${FULL_NAME}"
+    echo "+x granted."
+}
+
+main "$@"
+
+
