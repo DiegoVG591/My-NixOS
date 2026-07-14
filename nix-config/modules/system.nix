@@ -14,6 +14,8 @@
             "adbusers"       # Android debugging
             "wireshark"      # packet capture without root
             "input"          # input devices (ydotool)
+            "expressvpn"     # expressvpn acces
+            "expressvpnhnsd" # acces to filtering rules
         ];
         shell = pkgs.zsh;
     };

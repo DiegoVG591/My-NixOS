@@ -35,5 +35,8 @@
         "i2c-dev"      # required for OpenRGB
         "v4l2loopback" # virtual camera
         "snd-aloop"    # audio loopback for virtual mic
+        "ip_tables"
+        "ip6_tables"
+        "tun"
     ];
 }
