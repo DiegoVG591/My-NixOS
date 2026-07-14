@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
+# Cycles color combos on the hyprlock equalizer labels (top / text / bottom)
+# Targets labels.conf, locating color lines dynamically — safe against edits.
 
 WHITE="rgba(227, 217, 197, 1)"
 PINK="rgba(255, 196, 234, 0.75)"
 PURPLE="rgba(68, 0, 112, 1)"
 
-HYPRLOCK_CONF="$HOME/.config/hypr/hyprlock.conf"
+LABELS_CONF="$HOME/.config/hypr/scripts/hyprlock-eq/labels.conf"
 
 combinations=(
     "blanco/blanco/blanco:$WHITE:$WHITE:$WHITE"
@@ -23,20 +25,19 @@ combinations=(
     "blanco/rosa/morado:$WHITE:$PINK:$PURPLE"
     "blanco/morado/rosa:$WHITE:$PURPLE:$PINK"
 )
-
 total=${#combinations[@]}
 
 apply_colors() {
-    local top="$1"
-    local mid="$2"
-    local bot="$3"
-
-    # This assumes the order in hyprlock.conf is: EQUALIZER, NOWPLAYING, EQUALIZER_INVERTED
-    sed -i "159s/.*/     color = $top/" "$HYPRLOCK_CONF"
-    sed -i "170s/.*/     color = $mid/" "$HYPRLOCK_CONF"  
-    sed -i "181s/.*/     color = $bot/" "$HYPRLOCK_CONF"
-    
-    
+    local top="$1" mid="$2" bot="$3"
+    # Find the line numbers of the three 'color =' lines (order: eq, nowplaying, eq_inverted)
+    mapfile -t color_lines < <(grep -n '^\s*color = ' "$LABELS_CONF" | cut -d: -f1)
+    if (( ${#color_lines[@]} != 3 )); then
+        echo "❌ Expected 3 'color =' lines in $LABELS_CONF, found ${#color_lines[@]}. Aborting."
+        exit 1
+    fi
+    sed -i "${color_lines[0]}s|color = .*|color = $top # top|"    "$LABELS_CONF"
+    sed -i "${color_lines[1]}s|color = .*|color = $mid # text|"   "$LABELS_CONF"
+    sed -i "${color_lines[2]}s|color = .*|color = $bot # bottom|" "$LABELS_CONF"
 }
 
 for i in "${!combinations[@]}"; do
@@ -47,6 +48,5 @@ for i in "${!combinations[@]}"; do
     echo "👁  ahora: $name (arriba / texto / abajo)"
     hyprlock
 done
-
 echo ""
 echo "✅ Todas las combinaciones probadas!"
