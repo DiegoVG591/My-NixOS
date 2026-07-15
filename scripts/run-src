@@ -35,7 +35,7 @@ main() {
   getCommands
 
   if [[ -n "${COMPILE_COMMAND}" ]]; then
-      ${COMPILE_COMMAND} || exit 1 # exit if fail to compile
+      ${COMPILE_COMMAND} || exit 1 # exit if fail to compile — NOTE: filenames with spaces unsupported
   fi
 
   if ${PAGER_MODE}; then
@@ -94,7 +94,7 @@ handleShebang() {
     RUN_COMMAND="./${FULL_NAME}"
 
     # Saftry check
-    read -p "'${FULL_NAME}' needs +x to run. Grant it? (y/N) " confirm
+    read -rp "'${FULL_NAME}' needs +x to run. Grant it? (y/N) " confirm
     if [[ "$confirm" != [yY] ]]; then
         echo "Aborted."
         exit 1
