@@ -9,6 +9,10 @@ source "$HOME/mysystem/zsh/scripts/theme_loader.zsh"
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 
+###############
+## AUTO OPEN ##
+###############
+
 # --- Load your desired theme ---
 Themes "cool-cats"
 
@@ -16,6 +20,11 @@ Themes "cool-cats"
 if [[ $? -ne 0 ]]; then
   echo "Failed to load theme, using basic prompt."
   PROMPT='%n@%m %~ %# '
+fi
+
+# --- AUTO TMUX (every interactive shell lives in tmux) --- #
+if [[ -z "$TMUX" ]] && [[ -o interactive ]]; then
+    exec tmux
 fi
 
 #################
