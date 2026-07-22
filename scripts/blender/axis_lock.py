@@ -3,10 +3,10 @@ import bpy
 bl_info = {
     "name": "Toggle Axis Lock (X/Y/Z)",
     "author": "Gemini",
-    "version": (1, 6),
+    "version": (1, 8),
     "blender": (4, 0, 0),
     "location": "View3D > Keybindings",
-    "description": "Transforms selection starting with 0 locks. Toggling Alt+X/Y/Z activates the system. Alt+C clears all locks.",
+    "description": "Transforms selection starting with 0 locks. Toggling Shift+Alt+X/Y/Z activates the system. Shift+Alt+C clears all locks.",
     "category": "3D View",
 }
 
@@ -23,16 +23,13 @@ def clear_all_locks():
 def toggle_single_axis(axis):
     global AXIS_LOCK_ACTIVE, LOCKED_AXES
     
-    # Guard clause: Add axis if it is not present and exit immediately
     if axis not in LOCKED_AXES:
         LOCKED_AXES.add(axis)
         AXIS_LOCK_ACTIVE = True
         return f"Added {axis} -> Global Axis Lock ACTIVE: [{', '.join(sorted(list(LOCKED_AXES)))}]"
         
-    # Standard flow: Handle removal safely
     LOCKED_AXES.remove(axis)
     
-    # Guard clause: If removal emptied the set, disable tracking
     if not LOCKED_AXES:
         AXIS_LOCK_ACTIVE = False
         return "All locks cleared. Global Axis Lock: DISABLED"
@@ -41,14 +38,13 @@ def toggle_single_axis(axis):
 
 def get_transformation_constraints():
     global AXIS_LOCK_ACTIVE, LOCKED_AXES
-    # Guard clause: Return default free transformation if system is inactive
     if not AXIS_LOCK_ACTIVE or not LOCKED_AXES:
         return (False, False, False)
         
     return (
-        "X" not in LOCKED_AXES, 
-        "Y" not in LOCKED_AXES, 
-        "Z" not in LOCKED_AXES
+        "X" in LOCKED_AXES, 
+        "Y" in LOCKED_AXES, 
+        "Z" in LOCKED_AXES
     )
 
 def execute_translation(context, constraints):
@@ -80,7 +76,6 @@ class VIEW3D_OT_axis_lock_modify(bpy.types.Operator):
     target_axis: bpy.props.StringProperty(default="Y")
 
     def execute(self, context):
-        # Guard clause: bypass logic if target is CLEAR
         if self.target_axis == "CLEAR":
             self.report({'INFO'}, clear_all_locks())
             return {'FINISHED'}
@@ -100,19 +95,16 @@ class VIEW3D_OT_transform_locked(bpy.types.Operator):
     def execute(self, context):
         constraints = get_transformation_constraints()
         
-        # Guard clause: redirect to translation handler
         if self.mode == "TRANSLATION":
             execute_translation(context, constraints)
             return {'FINISHED'}
             
-        # Guard clause: redirect to resize handler
         if self.mode == "RESIZE":
             execute_resize(context, constraints)
             return {'FINISHED'}
             
         return {'FINISHED'}
 
-# Keymap Registry Boilerplate (Flattened loops)
 addon_keymaps = []
 
 def register_keybinds(km):
@@ -122,16 +114,17 @@ def register_keybinds(km):
     kmi_s = km.keymap_items.new(VIEW3D_OT_transform_locked.bl_idname, type='S', value='PRESS')
     kmi_s.properties.mode = "RESIZE"
     
-    kmi_x = km.keymap_items.new(VIEW3D_OT_axis_lock_modify.bl_idname, type='X', value='PRESS', alt=True)
+    # CAMBIADO: Ahora usan shift=True y alt=True para la combinación Shift+Alt
+    kmi_x = km.keymap_items.new(VIEW3D_OT_axis_lock_modify.bl_idname, type='X', value='PRESS', shift=True, alt=True)
     kmi_x.properties.target_axis = "X"
     
-    kmi_y = km.keymap_items.new(VIEW3D_OT_axis_lock_modify.bl_idname, type='Y', value='PRESS', alt=True)
+    kmi_y = km.keymap_items.new(VIEW3D_OT_axis_lock_modify.bl_idname, type='Y', value='PRESS', shift=True, alt=True)
     kmi_y.properties.target_axis = "Y"
     
-    kmi_z = km.keymap_items.new(VIEW3D_OT_axis_lock_modify.bl_idname, type='Z', value='PRESS', alt=True)
+    kmi_z = km.keymap_items.new(VIEW3D_OT_axis_lock_modify.bl_idname, type='Z', value='PRESS', shift=True, alt=True)
     kmi_z.properties.target_axis = "Z"
     
-    kmi_clear = km.keymap_items.new(VIEW3D_OT_axis_lock_modify.bl_idname, type='C', value='PRESS', alt=True)
+    kmi_clear = km.keymap_items.new(VIEW3D_OT_axis_lock_modify.bl_idname, type='C', value='PRESS', shift=True, alt=True)
     kmi_clear.properties.target_axis = "CLEAR"
     
     addon_keymaps.extend([
@@ -146,11 +139,10 @@ def register():
     wm = bpy.context.window_manager
     kc = wm.keyconfigs.addon
     
-    # Guard clause: prevent setup if keyconfig is missing
     if not kc:
         return
         
-    km = kc.keymaps.new(name='Mesh', space_type='EMPTY')
+    km = kc.keymaps.new(name='3D View', space_type='VIEW_3D')
     register_keybinds(km)
 
 def unregister():
