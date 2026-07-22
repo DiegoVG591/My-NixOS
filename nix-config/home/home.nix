@@ -14,8 +14,6 @@
         inputs.zen-browser.homeModules.beta
     ];
 
-    home.sessionPath = [ "$HOME/mysystem/scripts" ];
-
     # --- HOME SETTINGS --- #
     home.username = "krieg";
     home.homeDirectory = "/home/krieg";
@@ -23,7 +21,7 @@
     home.enableNixpkgsReleaseCheck = false;
 
     # --- SESSION --- #
-    home.sessionPath = [ "$HOME/.local/bin" ];
+    home.sessionPath = [ "$HOME/.local/bin, $HOME/mysystem/scripts" ];
     home.sessionVariables = {
         EDITOR = "nvim";
     };
