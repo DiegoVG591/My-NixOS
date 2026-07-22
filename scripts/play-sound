@@ -22,3 +22,4 @@ mpv --no-video --ao=pipewire \
 mpv --no-video --ao=pipewire \
     --audio-device=pipewire/alsa_output.usb-Razer_Razer_Barracuda_X-00.analog-stereo \
     --volume="$VOLUME" "$FILE" &
+

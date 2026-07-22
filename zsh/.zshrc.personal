@@ -27,35 +27,6 @@ if [[ -z "$TMUX" ]] && [[ -o interactive ]]; then
     exec tmux
 fi
 
-#################
-## VIRTUAL MIC ##
-#################
-
-# Toggle monitoring: routes VirtualMicSink directly to your headphones
-# so YOU can hear what Discord/OBS is receiving
-toggle-monitor() {
-    local SINK="alsa_output.usb-Razer_Razer_Barracuda_X-00.analog-stereo"
-    local VMIC="VirtualMicSink"
-
-    if pw-link -l | grep -A1 "$VMIC:monitor_FL" | grep -q "$SINK:playback_FL"; then
-        echo "🔇 Monitoring OFF"
-        pw-link -d "$VMIC:monitor_FL" "$SINK:playback_FL"
-        pw-link -d "$VMIC:monitor_FR" "$SINK:playback_FR"
-    else
-        echo "🎧 Monitoring ON"
-        pw-link "$VMIC:monitor_FL" "$SINK:playback_FL"
-        pw-link "$VMIC:monitor_FR" "$SINK:playback_FR"
-    fi
-}
-
-# Quick test: play faaaa into the virtual mic
-test-vmic() {
-    local file="${1:-$HOME/vods/Audios/faaaa.mp3}"
-    local vol="${2:-50}"
-    echo "🎤 Playing $(basename $file) at ${vol}% → VirtualMic..."
-    mpv --no-video --ao=pipewire --audio-device=pipewire/VirtualMicSink --volume="$vol" "$file"
-}
-
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
 # a theme from this variable instead of looking in $ZSH/themes/
@@ -158,8 +129,7 @@ plugins=(git)
 
   # OLD: alias man-virtualMic="cat ~/mysystem/docs/virtual_mic_setup.txt"
   alias man-virtualMic="cat ~/mysystem/scripts/manuals/virtual_mic_setup.txt"
-  alias mon-on="pw-link VirtualMicSink:monitor_FL $MAIN_SINK:playback_FL && pw-link VirtualMicSink:monitor_FR $MAIN_SINK:playback_FR"
-  alias mon-off="pw-link -d VirtualMicSink:monitor_FL $MAIN_SINK:playback_FL && pw-link -d VirtualMicSink:monitor_FR $MAIN_SINK:playback_FR"
+  alias toggle-mon="~/mysystem/scripts/toggle-monitor"
   # precise vmic volume control
   alias vmic-vol='pactl set-sink-volume VirtualMicSink'
   # usage: vmic-vol 80%   or   vmic-vol 120%

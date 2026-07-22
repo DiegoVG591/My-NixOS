@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# Toggle monitoring: routes VirtualMicSink directly to your headphones
+# so YOU can hear what Discord/OBS is receiving
+SINK="alsa_output.usb-Razer_Razer_Barracuda_X-00.analog-stereo"
+VMIC="VirtualMicSink"
+
+if pw-link -l | grep -A5 "$VMIC:monitor_FL" | grep -q "$SINK:playback_FL"; then
+    echo "🔇 Monitoring OFF"
+    pw-link -d "$VMIC:monitor_FL" "$SINK:playback_FL"
+    pw-link -d "$VMIC:monitor_FR" "$SINK:playback_FR"
+else
+    echo "🎧 Monitoring ON"
+    pw-link "$VMIC:monitor_FL" "$SINK:playback_FL"
+    pw-link "$VMIC:monitor_FR" "$SINK:playback_FR"
+fi

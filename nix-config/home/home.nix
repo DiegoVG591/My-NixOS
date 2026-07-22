@@ -14,6 +14,8 @@
         inputs.zen-browser.homeModules.beta
     ];
 
+    home.sessionPath = [ "$HOME/mysystem/scripts" ];
+
     # --- HOME SETTINGS --- #
     home.username = "krieg";
     home.homeDirectory = "/home/krieg";
