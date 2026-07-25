@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# Base structure (usage/help function, filename derivation,
+# ffmpeg DNxHD/PCM flags) adapted from NapoleonWils0n's dnxhd-pcm
+# (github.com/NapoleonWils0n/nixos-bin/blob/master/dnxhd-pcm).
+# YouTube/yt-dlp support and argument parsing are original additions.
+
 usage()
 {
 [ -z "${1}" ] || echo "! ${1}"
