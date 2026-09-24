@@ -1,0 +1,23 @@
+============================================================
+OBS NOISE-CANCELING VIRTUAL MIC SETUP
+============================================================
+
+1. OBS AUDIO SETTINGS:
+   - Go to Settings -> Audio -> Advanced.
+   - Set 'Monitoring Device' to: "VirtualSpeaker"
+     (This sends OBS's processed audio into our virtual pipe).
+
+2. OBS MIXER SETTINGS:
+   - Click the three dots (⋮) on your 'Mic/Aux' source.
+   - Select 'Advanced Audio Properties'.
+   - Set 'Audio Monitoring' for Mic/Aux to: "Monitor and Output".
+   - Ensure your 'Noise Suppression' (RNNoise) filter is active.
+
+3. DISCORD SETTINGS:
+   - Set 'Input Device' to: "VirtualMic"
+   - Disable Discord's internal 'Noise Suppression' so it doesn't 
+     interfere with the OBS clean signal.
+
+4. VERIFICATION:
+   - Run 'pw-link -io' to see the active routing.
+============================================================

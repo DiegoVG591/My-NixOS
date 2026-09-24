@@ -1,38 +1,47 @@
 {
-  description = "My favourite NixOS flake";
+  description = "My NixOS flake";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager = {
       url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs"; # Ensures HM uses the same nixpkgs
-    };
-    # Add zen-browser input here
-    zen-browser = {
-      url = "github:0xc000022070/zen-browser-flake";
-      # Make zen-browser use the same nixpkgs as the rest of your system
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Add the superfile flake as a new input
-    superfile = {
-      url = "github:yorukot/superfile";
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Add Stormy (Weather forecast)
     stormy = {
       url = "github:ashish0kumar/stormy";
     };
+    nvim-config = {
+      url = "github:DiegoVG591/nvim";
+      flake = false;
+    };
   };
 
-  outputs = { nixpkgs, home-manager, superfile, ... }@inputs:
+  outputs = { nixpkgs, home-manager, ... }@inputs:
   let
-    system = "x86_64-linux";
+    system = "x86_64-linux"; # both hosts are x86_64-linux, shared here
   in
   {
     nixosConfigurations = {
-      myNixos = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs system superfile; }; # Pass inputs and system to modules
+      desktop = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit inputs system; };
         modules = [
-          ./nixos/configuration.nix
+          ./nix-config/hosts/desktop/default.nix
+          {
+            nixpkgs.config.allowUnfree = true;
+          }
+        ];
+      };
+      laptop = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit inputs system; };
+        modules = [
+          ./nix-config/hosts/laptop/default.nix
+          {
+            nixpkgs.config.allowUnfree = true;
+          }
         ];
       };
     };

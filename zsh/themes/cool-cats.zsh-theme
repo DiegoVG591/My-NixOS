@@ -1,5 +1,10 @@
 # /home/krieg/mysystem/zsh/themes/cool-cats.zsh-theme
 
+# Base structure adapted from oh-my-zsh's robbyrussell theme
+# (github.com/ohmyzsh/ohmyzsh/blob/master/themes/robbyrussell.zsh-theme)
+# — exit-code-colored prompt symbol, git integration. Cat-face
+# kaomoji and further styling are original.
+
 # Ensure Zsh's color and prompt systems are ready
 autoload -Uz colors && colors
 setopt PROMPT_SUBST

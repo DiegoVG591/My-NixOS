@@ -9,6 +9,10 @@ source "$HOME/mysystem/zsh/scripts/theme_loader.zsh"
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 
+###############
+## AUTO OPEN ##
+###############
+
 # --- Load your desired theme ---
 Themes "cool-cats"
 
@@ -17,6 +21,12 @@ if [[ $? -ne 0 ]]; then
   echo "Failed to load theme, using basic prompt."
   PROMPT='%n@%m %~ %# '
 fi
+
+# --- AUTO TMUX (every interactive shell lives in tmux) --- #
+if [[ -z "$TMUX" ]] && [[ -o interactive ]]; then
+    exec tmux
+fi
+
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
 # a theme from this variable instead of looking in $ZSH/themes/
@@ -105,14 +115,24 @@ plugins=(git)
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-  alias update-myNixos='sudo nixos-rebuild switch --flake /home/krieg/mysystem#myNixos'
-  # Creates the virtual audio cable by running our script
-  alias create-cable="/home/krieg/mysystem/VM-MicScrit/virtualMic.sh"
-  # Removes all virtual devices created by the script
-  alias destroy-cable="pactl unload-module module-null-sink"
+  alias update-myNixos='sudo nixos-rebuild boot --flake ~/mysystem#myNixos'
   # open superfile
   alias spf='superfile'
-  alias connectUtad='nmcli device wifi connect "U-tad" password "tPktpUZhRT"' # TODO:Fix it
-  alias rmhs='find ~ -name "*_hyprshot.png" -delete'
+  # RM screen shots
+  alias rmhs='~/mysystem/scripts/rmhs.sh'
+  # Force kill davinci
+  alias kill-davinci='pkill -9 -f "davinci|resolve|bwrap"'
+  # DNX Convertor
+  alias dnx-convert='~/mysystem/scripts/DNX_Convert.sh'
+  # Virtual mic
+  export MAIN_SINK="alsa_output.usb-Razer_Razer_Barracuda_X-00.analog-stereo"
+
+  # OLD: alias man-virtualMic="cat ~/mysystem/docs/virtual_mic_setup.txt"
+  alias man-virtualMic="cat ~/mysystem/scripts/manuals/virtual_mic_setup.txt"
+  alias toggle-mon="~/mysystem/scripts/toggle-monitor"
+  # precise vmic volume control
+  alias vmic-vol='pactl set-sink-volume VirtualMicSink'
+  # usage: vmic-vol 80%   or   vmic-vol 120%
+
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
