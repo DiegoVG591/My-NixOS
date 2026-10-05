@@ -84,6 +84,8 @@
         wget
         chromium
         net-tools
+        inetutils
+        xinetd
 
         # --- FILE MANAGEMENT --- #
         superfile        # terminal file manager

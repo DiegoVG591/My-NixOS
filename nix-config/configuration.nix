@@ -12,6 +12,7 @@
         ./modules/security.nix
         ./modules/storage.nix
         ./modules/system.nix
+        ./modules/networking-lab/default.nix
     ];
     # --- HOME MANAGER INTEGRATION --- #
     home-manager = {
