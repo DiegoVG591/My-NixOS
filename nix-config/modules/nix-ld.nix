@@ -22,12 +22,13 @@
         systemd     # systemd libraries
 
         # --- XORG LIBRARIES --- #
-        # X11 display libraries needed by GUI apps
-        libx11 libxcomposite libxdamage libxext
-        libxfixes libxrandr libxtst libxcb
-        libxshmfence libxxf86vm libxinerama
-        libxcursor libxrender libxscrnsaver
-        libxi libsm libice libxt libxmu libxft
+        # X11 display libraries needed by GUI apps 
+        libx11 libxcomposite libxdamage 
+        libxext libxfixes libxrandr 
+        libxtst libxcb libxshmfence 
+        libxxf86vm libxinerama libxcursor 
+        libxrender libxscrnsaver libxi 
+        libsm libice libxt libxmu libxft
 
         # --- GRAPHICS & AUDIO --- #
         libGL           # OpenGL
@@ -60,7 +61,7 @@
 
         # --- NETWORKING/UTILS --- #
         networkmanager libxcrypt
-        coreutils pciutils zenity
+        coreutils pciutils zenity 
 
         # --- COMPATIBILITY --- #
         fuse        # filesystem in userspace
