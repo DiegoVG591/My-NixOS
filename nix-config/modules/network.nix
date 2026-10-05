@@ -8,8 +8,6 @@ in
     networking.networkmanager.enable = true;
     networking.wireless.iwd.enable = true;
     networking.networkmanager.wifi.backend = "iwd";
-    networking.nftables.enable = false;
-    networking.firewall.package = pkgs.iptables-legacy;
 
     # --- FIREWALL SETTINGS --- #
     networking.firewall = {
