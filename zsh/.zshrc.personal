@@ -115,7 +115,7 @@ plugins=(git)
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-  alias update-myNixos='sudo nixos-rebuild boot --flake ~/mysystem#myNixos'
+  alias update-mySystem='sudo nixos-rebuild boot --flake ~/mysystem'
   # open superfile
   alias spf='superfile'
   # RM screen shots
