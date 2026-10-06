@@ -6,4 +6,6 @@
         ./hardware-configuration.nix
         ./hybrid-graphics.nix
     ];
+
+    networking.hostName = "laptop";
 }
