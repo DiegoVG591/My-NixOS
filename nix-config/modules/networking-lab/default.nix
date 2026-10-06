@@ -7,7 +7,7 @@
 
     # DEMOS
     services.vsftpd = {
-        enable = true;
+        enable = false;
         localUsers = true;
         writeEnable = true;
         extraConfig = ''
