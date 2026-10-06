@@ -6,8 +6,42 @@ live in `future.txt`, which is gitignored.
 
 ---
 
+## 🔁 Two-machine routine
+
+Both machines (`desktop`, `laptop`) follow `origin/main`. GitHub is the
+single source of truth.
+
+**Start of a session on a machine:**
+1. `git fetch`, then `git status -sb`
+2. `[behind N]` → `git pull --ff-only` (`[ahead N]` → push first;
+   `[ahead N, behind M]` → diverged, stop and sort it out by hand)
+3. `git diff --stat ORIG_HEAD HEAD` to see what came in:
+   - `nix-config/`, `flake.nix`, `flake.lock`, `pkgs/` → `update-mySystem`
+     and reboot
+   - `nvim-config` pointer → `git submodule update --init`
+   - `zsh/.zshrc.personal`, `conf/` → `exec zsh` / reload
+   - docs, notes, scripts only → nothing more to do
+
+**End of a session:** commit and push, so the other machine has something
+to pull.
+
+---
+
 ## ✅ Recently completed
 
+- **Branch unification**: `laptop` and `main` merged into one history
+  (`merge -s ours`, then `main` fast-forwarded). One flake, two
+  `nixosConfigurations` (`desktop`, `laptop`) built from
+  `nix-config/hosts/*`, sharing the same modules; laptop-only
+  `hybrid-graphics.nix` (nvidia-prime). Per-host `networking.hostName`,
+  and a single `update-mySystem` alias that picks the host from the
+  hostname. Both machines rebuilt, booted and verified.
+- **Firewall**: removed the legacy iptables / nftables overrides from
+  `network.nix` (ExpressVPN debugging leftovers that kept the firewall
+  service from starting). Firewall starts cleanly on both machines.
+- **networking-lab module**: `nix-config/modules/networking-lab/` with
+  vsftpd (disabled by default), its PAM service, and the FTP + passive
+  port range in the firewall. Phone → laptop transfer verified end to end.
 - **run-src**: hand-built bash script replacing `run-file.sh` +
   `run-file-pager.sh`. Multi-file/glob support, sequential tmux-pane
   execution via `wait-for` signaling, per-language `bin/<lang>/` output
@@ -34,6 +68,10 @@ live in `future.txt`, which is gitignored.
   stale duplicate submodule entry in `.gitmodules`, fixed a real
   `<leader>ca` keybind collision between cellular-automaton and LSP code
   action.
+- **Unused vsftpd test certificate**: removed `certs/vsftpd.pem` from the
+  repo and added `*.pem` to `.gitignore`. The private key is still in
+  public git history, so it is treated as burned and must never be reused
+  for anything real.
 - **RGB (OpenRGB)**: zone mapping fully corrected (be quiet! fans were on
   a zero-sized zone), `purple` profile re-saved and verified working via
   CLI round-trip. Band-aid notification added for boot-race failures
@@ -105,15 +143,31 @@ live in `future.txt`, which is gitignored.
 - [ ] README note documenting that `scripts/` stays flat until non-shell
       languages are introduced
 - [ ] Extract remaining plain zshrc aliases (`rmhs`, `kill-davinci`,
-      `dnx-convert`, `spf`, `update-myNixos`, `man-virtualMic`,
+      `dnx-convert`, `spf`, `update-mySystem`, `man-virtualMic`,
       `vmic-vol`) into a shell-neutral `shell/aliases` file — partially
       done (toggle-monitor/play-sound already extracted as standalone
       scripts)
 - [ ] Bring config-linking under an automated tool (GNU Stow or a small
       script) instead of manual per-app `ln -s`
-- [ ] Merge separate laptop/desktop branches into one flake with two
-      `nixosConfigurations` sharing modules, instead of cherry-picking
-      between branches
+- [ ] Move `force-gigabit` out of the shared `network.nix` into
+      `hosts/desktop/` — it targets `enp4s0`, so the laptop currently
+      runs a service for an interface it doesn't have
+- [ ] Per-host wallpaper preloads: `hyprpaper.conf` preloads wallpapers
+      for both machines, so each one may log errors for files that don't
+      exist on it (cosmetic)
+- [ ] Per-host cava audio source: the laptop has no Razer headset, so the
+      hyprlock equalizer shows no bars there. `~/.config/cava/config`
+      isn't in `mysystem/conf/` yet, so the fix currently exists only on
+      the desktop (cosmetic)
+- [ ] Check unexplained leftovers: `scripts/TMP`, `tmpRealConfig/`, and
+      whether `conf/tmux/plugins/` (TPM-cloned third-party repos) is
+      tracked wholesale
+- [ ] Untrack `scripts/blender/__pycache__/axis_lock.cpython-314.pyc`
+      and gitignore `__pycache__/`
+- [ ] Decide whether `conf/waybar/config.bak` stays tracked or goes
+- [ ] Delete the old `laptop` branch (local and remote) after a few days
+      of using both machines on `main`; check that no alias or script
+      still refers to it
 - [ ] Migrate Hyprland to a flake input for broader plugin ecosystem
       access (wanted, explicitly deprioritized)
 
@@ -151,6 +205,30 @@ live in `future.txt`, which is gitignored.
       nixpkgs#524892), and current hyprsplit has moved to a Lua
       architecture needing the home-manager `wayland.windowManager.hyprland`
       module, which isn't in use (hyprland.conf is hand-managed)
+
+---
+
+## 🌐 Networking
+
+- [ ] `networking-lab`: give it an enable flag (or move it under
+      `hosts/laptop/`) so the desktop doesn't open FTP ports for a
+      service it never runs. vsftpd itself stays `enable = false` except
+      while testing — plaintext FTP
+- [ ] vsftpd: define the passive port range once with a `let` and use it
+      in both the firewall and `extraConfig`, so the two can't drift
+- [ ] vsftpd: add `localRoot` so the phone only sees one folder instead
+      of the whole home directory
+- [ ] Phone (GrapheneOS): "Always-on VPN + Block connections without
+      VPN" blocks LAN access. Either use the VPN app's LAN-bypass option
+      or only disable lockdown while testing, and re-enable afterwards
+- [ ] `networking-lab` future: xinetd + inetutils comparison against the
+      native vsftpd approach; split into one file per exercise when a
+      second one arrives
+- [ ] WireGuard + SSH remote access from the uni laptop to the home PC:
+      SSH reachable only through the tunnel, key-based auth only, DDNS
+      instead of a static IP. Order: build and test on the LAN first →
+      have a friend from cybersecurity review it → only then the router
+      port-forward
 
 ---
 
