@@ -34,7 +34,13 @@ let
         fi
 
         eval "$CMD"
-        '';
+   '';
+
+    # --- JUPYNIUM PYTHON WRAPPER ---
+    jupynium-python = pkgs.writeShellScriptBin "jupynium-python" ''
+        export LD_LIBRARY_PATH=${pkgs.stdenv.cc.cc.lib}/lib
+        exec /home/krieg/.virtualenvs/jupynium/bin/python "$@"
+    '';
 in
     {
     home.packages = with pkgs; [
@@ -112,5 +118,8 @@ in
 
         # --- NVIM UNITY INTEGRATION --- #
         nvimunity
+
+        # --- JUPYTER PYTHON INTEGRATION ---
+        jupynium-python
     ];
 }
