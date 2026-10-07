@@ -1,9 +1,12 @@
 { config, lib, pkgs, ... }:
 let
-  jupyterEnv = pkgs.python314.withPackages (ps: [
+  pyDevTools = pkgs.python314.withPackages (ps: [
     ps.jupyter-console   # Rich interactive Python CLI
     ps.notebook          # Python notebook
     ps.nbclassic         # Notebook 6 interface
+    ps.flake8            # Linter
+    ps.black             # formatter
+    ps.isort             # formatter
   ]);
 in
 {
@@ -119,7 +122,7 @@ in
         unityhub         # Unity game engine
         android-tools    # ADB for Android devices
         geckodriver      # Lets programs (Selenium) control Firefox
-        jupyterEnv       # Python environment with jupyter
+        pyDevTools       # Python tools
 
         # --- HARDWARE CONTROL --- #
         bluez  # bluetooth CLI tools (bluetoothctl)
