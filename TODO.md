@@ -29,6 +29,18 @@ to pull.
 
 ## ✅ Recently completed
 
+- **Python / Jupyter stack for class (jupynium)**: `jupynium.nvim` working
+  end to end on the desktop — notebook sync, cell execution (`<space>x`)
+  and Jupyter-kernel completion in nvim-cmp (verified with
+  `get_ipython`). Pieces: a single Nix Python environment `pyDevTools`
+  in `system.nix` (jupyter-console, notebook, nbclassic, flake8, black,
+  isort); `geckodriver` in the system packages; a venv at
+  `~/.virtualenvs/jupynium` holding the plugin's Python half (installed by
+  lazy's `build` line); a `jupynium-python` wrapper script in the home
+  packages that sets `LD_LIBRARY_PATH` to Nix's libstdc++ so the pip-built
+  `greenlet` wheel can load, used as the plugin's `python_host`; the
+  `jupynium` source added to the nvim-cmp `sources` list. Selenium
+  downloads its own Firefox into `~/.cache/selenium` (not Zen).
 - **Branch unification**: `laptop` and `main` merged into one history
   (`merge -s ours`, then `main` fast-forwarded). One flake, two
   `nixosConfigurations` (`desktop`, `laptop`) built from
@@ -91,6 +103,69 @@ to pull.
 
 ---
 
+## 🐍 Python / Jupyter (class setup)
+
+- [ ] **Laptop setup**: `git pull --ff-only`, `update-mySystem` + reboot,
+      then create the venv by hand (`python3 -m venv
+      ~/.virtualenvs/jupynium`) *before* opening nvim, so lazy's `build`
+      line has somewhere to install. The venv isn't declared anywhere in
+      the repos — decide whether to document it in the README or make it
+      reproducible
+- [ ] Selenium downloads its own Firefox into `~/.cache/selenium` on first
+      use (needs internet, version not pinned). Decide whether to pin a
+      Firefox through Nix instead
+- [ ] Consolidate Python: there is a plain `python314` in
+      `home/modules/packages.nix` and the `pyDevTools` environment in
+      `system.nix` — keep one, so `python3` is unambiguous
+- [ ] Add the class's libraries (numpy, matplotlib, …) to `pyDevTools` once
+      the course material says which — notebook kernels run in that
+      environment
+- [ ] `jupynium-python` only fixes `libstdc++` — other pip-built wheels may
+      need further libraries; revisit if a new compiled dependency fails
+      (alternative: take the compiled dependencies from nixpkgs)
+- [ ] `jupynium.lua`: split the large `opts` table into readable sections
+      with less nesting
+- [ ] Jupynium completion: the README's `sorting` / `comparators` block was
+      skipped on purpose (a `comparators` list replaces nvim-cmp's
+      defaults; `priority_weight` changes ranking for all sources) —
+      revisit only if kernel suggestions rank badly
+- [ ] Optional: set a Jupyter password instead of the per-run token (the
+      README recommends it); optional: upgrade pip inside the venv
+- [ ] Learn Python basics for the class (docs.python.org/3/tutorial)
+
+---
+
+## 📝 Neovim config
+
+- [ ] Give the `nvim-config` repo its own `README.md` and `TODO.md`
+- [ ] Lint setup: lua_ls and selene report `vim` as an undefined global —
+      configure them for Neovim (selene's Neovim std, lua_ls workspace
+      library)
+- [ ] Redo the LSP / linter / completion ecosystem properly (current setup
+      is a quick, partly adapted baseline). Includes: nvim-lint wiring for
+      tools that are only on PATH through Nix, and conform's formatters
+- [ ] `nvim-notify` warns at startup that `NotifyBackground` has no
+      background colour — set `background_colour` in its setup
+- [ ] `client.is_stopped is deprecated` message — find the offending
+      plugin with `:checkhealth vim.deprecated`
+
+---
+
+## 🖱️ Desktop defaults / cleanup
+
+- [ ] Make Zen the default browser for links opened by other apps (the
+      Hytale login opens Chrome instead). `BROWSER`/`DEFAULT_BROWSER` are
+      already `zen` in `system.nix`, so look at the XDG default
+      (`xdg-settings get default-web-browser`, mimeapps / `.desktop`
+      file) rather than the env vars
+- [ ] Once Zen is the default: remove `chromium` from `system.nix`
+      (confirm that's the "Chrome" that opens) and decide about `brave` in
+      the home packages
+- [ ] Decide whether `gcc` (and other toolchain packages) belong in the
+      system config instead of `home.packages`
+
+---
+
 ## 🏗️ Architecture
 
 - [ ] Drop or wire up the unused `nvim-config` flake input in
@@ -101,14 +176,18 @@ to pull.
       or proper systemd user services (waybar, notification daemon,
       audio enforcer, keyboard connect, RGB profile)
 - [ ] Scripts as proper Nix derivations (`writeShellScriptBin`) with
-      pinned dependencies, instead of relying on ambient `PATH`
+      pinned dependencies, instead of relying on ambient `PATH`. Also:
+      `nvimunity` and `jupynium-python` currently live inline in the
+      `let` of `home/modules/packages.nix` — move each into its own file
+      so the `let` goes away and the module stays small
 - [ ] Virtual mic links are declared in three places (wireplumber
       module, systemd user service, `start.sh`) — keep one, remove the
       race
 - [ ] `nm-applet --inidicator` typo in `start.sh` (silently wrong flag)
 - [ ] `nvimunity` script: broken nested-quote escaping in the `eval`
       construction, and `xdotool`-based Shift detection likely silently
-      fails on Wayland/Hyprland
+      fails on Wayland/Hyprland — refactor it by hand once the shell
+      scripting reading is done
 - [ ] `stateVersion` mismatch — `system.stateVersion = "25.05"` vs.
       `home.stateVersion = "26.05"` — investigate which is historically
       correct rather than just syncing them
