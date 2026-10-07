@@ -1,4 +1,11 @@
 { config, lib, pkgs, ... }:
+let
+  jupyterEnv = pkgs.python314.withPackages (ps: [
+    ps.jupyter-console   # Rich interactive Python CLI
+    ps.notebook          # Python notebook
+    ps.nbclassic         # Notebook 6 interface
+  ]);
+in
 {
     # --- USER SETTINGS --- #
     users.users.krieg = {
@@ -111,6 +118,8 @@
         jetbrains.clion  # C/C++ IDE (temporary)
         unityhub         # Unity game engine
         android-tools    # ADB for Android devices
+        geckodriver      # Lets programs (Selenium) control Firefox
+        jupyterEnv       # Python environment with jupyter
 
         # --- HARDWARE CONTROL --- #
         bluez  # bluetooth CLI tools (bluetoothctl)
