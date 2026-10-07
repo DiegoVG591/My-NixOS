@@ -41,6 +41,11 @@ to pull.
   `greenlet` wheel can load, used as the plugin's `python_host`; the
   `jupynium` source added to the nvim-cmp `sources` list. Selenium
   downloads its own Firefox into `~/.cache/selenium` (not Zen).
+- **Zen as the default browser**: the `xdg.mimeApps` entries in
+  `home/modules/programs.nix` pointed at `zen.desktop`, which doesn't
+  exist (Nix installs `zen-beta.desktop`), so lookups fell through to
+  Chromium. Fixed the filename; verified with `xdg-mime query default`
+  and the Hytale launcher login now opening Zen.
 - **Branch unification**: `laptop` and `main` merged into one history
   (`merge -s ours`, then `main` fast-forwarded). One flake, two
   `nixosConfigurations` (`desktop`, `laptop`) built from
@@ -114,6 +119,11 @@ to pull.
 - [ ] Selenium downloads its own Firefox into `~/.cache/selenium` on first
       use (needs internet, version not pinned). Decide whether to pin a
       Firefox through Nix instead
+- [ ] Someday: get jupynium to drive Zen instead of Selenium's Firefox.
+      Tried `SE_FIREFOX_PATH=~/.nix-profile/bin/zen-beta nvim …` (variable
+      documented by Selenium Manager): nothing launched, no geckodriver
+      process, and no error surfaced. Needs reading jupynium's/Selenium's
+      logs; Zen isn't an officially supported browser for jupynium
 - [ ] Consolidate Python: there is a plain `python314` in
       `home/modules/packages.nix` and the `pyDevTools` environment in
       `system.nix` — keep one, so `python3` is unambiguous
@@ -153,14 +163,17 @@ to pull.
 
 ## 🖱️ Desktop defaults / cleanup
 
-- [ ] Make Zen the default browser for links opened by other apps (the
-      Hytale login opens Chrome instead). `BROWSER`/`DEFAULT_BROWSER` are
-      already `zen` in `system.nix`, so look at the XDG default
-      (`xdg-settings get default-web-browser`, mimeapps / `.desktop`
-      file) rather than the env vars
-- [ ] Once Zen is the default: remove `chromium` from `system.nix`
-      (confirm that's the "Chrome" that opens) and decide about `brave` in
-      the home packages
+- [ ] Remove `chromium` from `system.nix` and decide about `brave` in the
+      home packages. First check what the two web-app shortcuts
+      `chrome-hoeckimmdkhoojlgdafcefdbcpkigklk-Default.desktop` and
+      `brave-hoeckimmdkhoojlgdafcefdbcpkigklk-Default.desktop` in
+      `~/.local/share/applications` are for — removing the browsers would
+      break them
+- [ ] `xdg.mimeApps` is declared in both `home/modules/display.nix` and
+      `home/modules/programs.nix` — works (the module system merges them),
+      but move it into one place
+- [ ] `xdg-settings get default-web-browser` still reports `gvim.desktop`
+      (stray association); check whether it matters or just remove it
 - [ ] Decide whether `gcc` (and other toolchain packages) belong in the
       system config instead of `home.packages`
 
