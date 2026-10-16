@@ -128,6 +128,7 @@ in
         bluez  # bluetooth CLI tools (bluetoothctl)
         fanctl           # fan speed control
         openrgb-with-all-plugins  # RGB control
+        easyeffects # Audio effects for PipeWire
 
         # --- PRODUCTIVITY --- #
         obsidian         # note taking

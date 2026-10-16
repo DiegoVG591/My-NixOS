@@ -24,3 +24,6 @@ fcitx5 &
 
 # Connect bluetooth keyboard
 (sleep 5 && ~/mysystem/scripts/ConnectToKnownKeyboard.sh) &
+
+# Audio config/filters (easy effects)
+(sleep 3 && systemctl --user start easyeffects) &

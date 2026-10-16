@@ -14,7 +14,7 @@ in
 {
     services.pipewire.wireplumber.extraConfig."30-discord-mic-routing" = {
         "wireplumber.settings" = {
-            "linking.allow-moving-streams" = false;
+            "linking.allow-moving-streams" = true;
         };
         "node.rules" = [ discordMicRule ];
     };

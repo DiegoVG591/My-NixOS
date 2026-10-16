@@ -31,4 +31,12 @@
         jack.enable = true;
         wireplumber.enable = true;
     };
+
+    systemd.user.services.easyeffects = {
+        enable = true;
+        serviceConfig = {
+            ExecStart = "${pkgs.easyeffects}/bin/easyeffects --hide-window --service-mode";
+        };
+    };
+    programs.dconf.enable = true;
 }
