@@ -100,7 +100,6 @@ in
         # --- FILE MANAGEMENT --- #
         superfile        # terminal file manager
         p7zip            # 7zip archive tool
-        jmtpfs           # mount Android phones as files
         exfatprogs       # exFAT filesystem support
 
         # --- AUDIO / VIDEO --- #
