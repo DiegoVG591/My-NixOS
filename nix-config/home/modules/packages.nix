@@ -65,7 +65,7 @@ in
         go
         nodejs          # provides npm
         dotnet-sdk
-        jdk
+        jdk25
         clang-tools     # C/C++ language server (clangd)
         cmake
         plantuml        # UML diagrams
