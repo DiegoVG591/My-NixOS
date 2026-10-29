@@ -115,6 +115,10 @@ get_commands() {
       COMPILE_COMMAND=""
       RUN_COMMAND="python3 ${FULL_NAME}"
     ;;
+    lua)
+      COMPILE_COMMAND=""
+      RUN_COMMAND="lua ${FULL_NAME}"
+    ;;
     *)
       local file_header
       file_header=$(head -n 1 "${FULL_NAME}")
