@@ -2,7 +2,7 @@
 
 # --- CONFIGURATION ---
 TARGET_SINK="alsa_output.usb-Razer_Razer_Barracuda_X-00.analog-stereo"
-APPS=("mpv" "Anki" "Discord" "OBS")
+APPS=("mpv" "Anki" "Discord")
 # ---------------------
 
 echo "🎧 Audio Enforcer (DEBUG MODE) Started..."
