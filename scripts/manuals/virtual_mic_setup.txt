@@ -2,22 +2,36 @@
 OBS NOISE-CANCELING VIRTUAL MIC SETUP
 ============================================================
 
+CHAIN:
+   Blue mic -> OBS (filters) -> VirtualMicSink -> VirtualMic -> Discord
+   (play-sound also plays into VirtualMicSink)
+
 1. OBS AUDIO SETTINGS:
    - Go to Settings -> Audio -> Advanced.
-   - Set 'Monitoring Device' to: "VirtualSpeaker"
-     (This sends OBS's processed audio into our virtual pipe).
+   - Set 'Monitoring Device' to: "Virtual Mic Sink"
+     (This sends OBS's processed audio into the virtual sink).
 
 2. OBS MIXER SETTINGS:
-   - Click the three dots (⋮) on your 'Mic/Aux' source.
-   - Select 'Advanced Audio Properties'.
-   - Set 'Audio Monitoring' for Mic/Aux to: "Monitor and Output".
-   - Ensure your 'Noise Suppression' (RNNoise) filter is active.
+   - Open 'Advanced Audio Properties' from the Audio Mixer.
+   - Set 'Audio Monitoring' for Mic/Aux to: "Monitoring Enabled".
+   - Mic/Aux filters, all enabled, in this order: Noise Suppression
+     (RNNoise), Gain, 3-Band Equalizer, Expander, Compressor, Limiter.
 
 3. DISCORD SETTINGS:
-   - Set 'Input Device' to: "VirtualMic"
-   - Disable Discord's internal 'Noise Suppression' so it doesn't 
+   - Set 'Input Device' to: "Virtual Microphone" (the VirtualMic node).
+   - Disable Discord's internal 'Noise Suppression' so it doesn't
      interfere with the OBS clean signal.
 
 4. VERIFICATION:
-   - Run 'pw-link -io' to see the active routing.
+   - Run: pw-link -l | grep -A3 "^OBS-Monitor"
+     The lines with |-> must point at VirtualMicSink.
+   - 'pw-link -l' lists links (the real routing). 'pw-link -io' only
+     lists ports.
+   - Run 'toggle-monitor' to hear VirtualMicSink in the headset.
+     That link skips EasyEffects, so it sounds quieter than normal.
+
+5. IF OBS DOES NOT REACH VirtualMicSink:
+   - audio_enforcer.sh moves every app in its APPS list to the
+     headset. OBS (application.name "OBS") must NOT be in APPS.
+   - The enforcer only moves NEW streams: restart OBS after any change.
 ============================================================
